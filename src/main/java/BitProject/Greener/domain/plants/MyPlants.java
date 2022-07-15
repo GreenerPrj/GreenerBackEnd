@@ -39,4 +39,18 @@ public class MyPlants extends BaseEntity {
     @Column(nullable = false)
     private String imagePath;
 
+
+    public static MyPlants of(String name, LocalDateTime bornDate, String imagePath){
+        MyPlants instance = new MyPlants();
+        instance.name = name;
+        instance.bornDate = bornDate;
+        instance.imagePath = imagePath;
+        return instance;
+    }
+
+    public void mapMembersAndPlants(Members members, Plants plants){
+        this.members = members;
+        this.plants = plants;
+    }
+
 }
