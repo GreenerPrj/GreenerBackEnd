@@ -5,9 +5,7 @@ import BitProject.Greener.domain.members.repository.MembersRepository;
 import BitProject.Greener.domain.plants.MyPlants;
 import BitProject.Greener.domain.plants.Plants;
 import BitProject.Greener.domain.plants.controller.request.MyPlantsCreateRequest;
-import BitProject.Greener.domain.plants.controller.request.PlantsCreateRequest;
 import BitProject.Greener.domain.plants.dto.MyPlantsDTO;
-import BitProject.Greener.domain.plants.dto.PlantsDTO;
 import BitProject.Greener.domain.plants.repository.MyPlantsRepository;
 import BitProject.Greener.domain.plants.repository.PlantsRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +21,6 @@ public class PlantsService {
     private final MyPlantsRepository myPlantsRepository;
     private final MembersRepository membersRepository;
 
-
-
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request) {
         Members members = membersRepository.findById(request.getMembersId())
             .orElseThrow(() -> new RuntimeException("아이디 없음"));
@@ -38,18 +34,6 @@ public class PlantsService {
         myPlantsRepository.save(myPlants);
         // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
         return MyPlantsDTO.convertToDTO(myPlants);
-
-    }
-    public PlantsDTO createPlants(PlantsCreateRequest request) {
-
-        Plants plants = new Plants();
-        plants.create(request.getName(),request.getContent(),request.getSunShine(),request.getWater(),request.getTempelature());
-        plantsRepository.save(plants);
-
-        PlantsDTO plantsDTO = new PlantsDTO();
-        plantsDTO.create(plants);
-        return plantsDTO;
-
 
     }
 }

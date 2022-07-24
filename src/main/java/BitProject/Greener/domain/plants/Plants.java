@@ -33,16 +33,6 @@ public class Plants extends BaseEntity {
     @Column(nullable = false)
     private Integer temperature;
 
-    public Plants create(String name,String content, Integer sunshine, Integer water, Integer temperature){
-        this.name =name;
-        this.content = content;
-        this.sunShine = sunshine;
-        this.temperature = temperature;
-        this.water = water;
-
-        return this;
-    }
-
 
 
 
