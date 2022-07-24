@@ -1,6 +1,6 @@
 package BitProject.Greener.domain.boards;
 
-public enum BoardType {
+public enum BoardsType {
 
     COMMUNITY("커뮤니티 게시판")
     , SHOP("분양게시판")
@@ -8,5 +8,5 @@ public enum BoardType {
 
     private final String label;
 
-    BoardType(String label){this.label = label;}
+    BoardsType(String label){this.label = label;}
 }

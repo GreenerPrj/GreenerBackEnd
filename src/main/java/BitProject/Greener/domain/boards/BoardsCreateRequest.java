@@ -13,4 +13,6 @@ public class BoardsCreateRequest {
     private String content;
 
     private String imagePath;
+
+    private BoardsType boardsType;
 }

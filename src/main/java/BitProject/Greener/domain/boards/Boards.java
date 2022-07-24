@@ -15,8 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 public class Boards extends BaseEntity {
@@ -40,13 +38,14 @@ public class Boards extends BaseEntity {
     private String imagePath;
 
     @Enumerated(STRING)
-    private BoardType boardType;
+    private BoardsType boardsType;
 
-    public static Boards of(String title,String content, String imagePath){
+    public static Boards of(String title,String content, String imagePath, BoardsType boardsType){
         Boards instance = new Boards();
         instance.title = title;
         instance.content = content;
         instance.imagePath = imagePath;
+        instance.boardsType = boardsType;
         return instance;
     }
     public void mapMembers(Members members) {
