@@ -11,7 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import BitProject.Greener.domain.plants.Plants;
 import lombok.Getter;
+
+import java.lang.reflect.Member;
 
 @Entity
 @Getter
@@ -32,5 +36,15 @@ public class Comments extends BaseEntity {
 
     @Column(nullable = false)
     private String content;
+
+    public static Comments of(String content) {
+        Comments instance = new Comments();
+        instance.content = content;
+        return instance;
+    }
+    public void mapMembersAndBoards(Members members, Boards boards) {
+        this.members = members;
+        this.boards = boards;
+    }
 
 }
