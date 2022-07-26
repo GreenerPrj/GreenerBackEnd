@@ -11,7 +11,8 @@ public class CommentsDTO {
     public static CommentsDTO convertToDTO(Comments comments) {
         CommentsDTO commentsDTO = new CommentsDTO();
         commentsDTO.id = comments.getId();
-        commentsDTO.content = commentsDTO.getContent();
+        // comments의 필드에서 content를 가져와야함
+        commentsDTO.content = comments.getContent();
         return commentsDTO;
 
     }
