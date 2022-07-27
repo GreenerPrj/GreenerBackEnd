@@ -6,19 +6,25 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:
-    username:
-    password:
+    url: jdbc:mysql://cl6-2.cdqf0gxh6nhf.ap-northeast-2.rds.amazonaws.com/sampledb2?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: admin
+    password: 12345678
 
 
 
-logging:
-  level:
-    org.springframework.orm.jpa: DEBUG
+#logging:
+#  level:
+#    org.springframework.orm.jpa: DEBUG
 
 server:
   servlet:
-    context-path: /api
+    context-path:
+
+SECRET_KEY :
+  hello
+
+

@@ -1,10 +1,10 @@
-package BitProject.Greener.domain.boards;
+package BitProject.Greener.domain.members.config.boards;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import BitProject.Greener.common.BaseEntity;
-import BitProject.Greener.domain.members.Members;
+import BitProject.Greener.domain.members.Domain.Entity.UserEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,10 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import BitProject.Greener.domain.plants.Plants;
 import lombok.Getter;
-
-import java.lang.reflect.Member;
 
 @Entity
 @Getter
@@ -32,7 +29,7 @@ public class Comments extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "members_id", referencedColumnName = "id")
-    private Members members;
+    private UserEntity members;
 
     @Column(nullable = false)
     private String content;
@@ -42,7 +39,7 @@ public class Comments extends BaseEntity {
         instance.content = content;
         return instance;
     }
-    public void mapMembersAndBoards(Members members, Boards boards) {
+    public void mapMembersAndBoards(UserEntity members, Boards boards) {
         this.members = members;
         this.boards = boards;
     }

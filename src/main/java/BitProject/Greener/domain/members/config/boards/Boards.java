@@ -1,56 +1,57 @@
-package BitProject.Greener.domain.plants;
+package BitProject.Greener.domain.members.config.boards;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import BitProject.Greener.common.BaseEntity;
-import BitProject.Greener.domain.members.Members;
-import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import BitProject.Greener.domain.members.Domain.Entity.UserEntity;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class MyPlants extends BaseEntity {
+public class Boards extends BaseEntity {
+
     @GeneratedValue(strategy = IDENTITY)
     @Id
     @Column(nullable = false)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "plants_id", referencedColumnName = "id")
-    private Plants plants;
-
-    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "members_id", referencedColumnName = "id")
-    private Members members;
+    private UserEntity members;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @Column(nullable = false)
-    private LocalDateTime bornDate;
+    private String content;
 
     @Column(nullable = false)
     private String imagePath;
 
+    @Enumerated(STRING)
+    private BoardsType boardsType;
 
-    public static MyPlants of(String name, LocalDateTime bornDate, String imagePath){
-        MyPlants instance = new MyPlants();
-        instance.name = name;
-        instance.bornDate = bornDate;
+    public static Boards of(String title,String content, String imagePath, BoardsType boardsType){
+        Boards instance = new Boards();
+        instance.title = title;
+        instance.content = content;
         instance.imagePath = imagePath;
+        instance.boardsType = boardsType;
         return instance;
     }
-
-    public void mapMembersAndPlants(Members members, Plants plants){
+    public void mapMembers(UserEntity members) {
         this.members = members;
-        this.plants = plants;
     }
 
 }

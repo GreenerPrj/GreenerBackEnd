@@ -1,8 +1,8 @@
 package BitProject.Greener.domain.plants.dto;
 
-import BitProject.Greener.domain.plants.MyPlants;
+import BitProject.Greener.domain.plants.Entity.MyPlants;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
+
 import lombok.Getter;
 
 @Getter
