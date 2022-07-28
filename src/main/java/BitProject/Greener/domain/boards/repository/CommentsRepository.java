@@ -1,4 +1,4 @@
-package BitProject.Greener.domain.plants.repository;
+package BitProject.Greener.domain.boards.repository;
 
 import BitProject.Greener.domain.boards.Boards;
 import BitProject.Greener.domain.boards.Comments;

@@ -1,4 +1,4 @@
-package BitProject.Greener.domain.members.repository;
+package BitProject.Greener.domain.boards.repository;
 
 import BitProject.Greener.domain.boards.Boards;
 import org.springframework.data.jpa.repository.JpaRepository;
