@@ -1,6 +1,9 @@
-package BitProject.Greener.domain.boards;
+package BitProject.Greener.domain.boards.controller;
 
 
+import BitProject.Greener.domain.boards.controller.request.CommentsCreateRequest;
+import BitProject.Greener.domain.boards.dto.CommentsDTO;
+import BitProject.Greener.domain.boards.service.CommentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

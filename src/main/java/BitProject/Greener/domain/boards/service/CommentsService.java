@@ -1,9 +1,13 @@
-package BitProject.Greener.domain.boards;
+package BitProject.Greener.domain.boards.service;
 
+import BitProject.Greener.domain.boards.Boards;
+import BitProject.Greener.domain.boards.Comments;
+import BitProject.Greener.domain.boards.controller.request.CommentsCreateRequest;
+import BitProject.Greener.domain.boards.dto.CommentsDTO;
 import BitProject.Greener.domain.members.Members;
-import BitProject.Greener.domain.members.repository.BoardsRepository;
+import BitProject.Greener.domain.boards.repository.BoardsRepository;
 import BitProject.Greener.domain.members.repository.MembersRepository;
-import BitProject.Greener.domain.plants.repository.CommentsRepository;
+import BitProject.Greener.domain.boards.repository.CommentsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
