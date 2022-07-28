@@ -4,7 +4,7 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import BitProject.Greener.common.BaseEntity;
-import BitProject.Greener.domain.members.Members;
+import BitProject.Greener.domain.members.domain.Entity.UserEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +28,7 @@ public class MyPlants extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "members_id", referencedColumnName = "id")
-    private Members members;
+    private UserEntity userEntity;
 
     @Column(nullable = false)
     private String name;
@@ -48,8 +48,8 @@ public class MyPlants extends BaseEntity {
         return instance;
     }
 
-    public void mapMembersAndPlants(Members members, Plants plants){
-        this.members = members;
+    public void mapMembersAndPlants(UserEntity userEntity, Plants plants){
+        this.userEntity = userEntity;
         this.plants = plants;
     }
 

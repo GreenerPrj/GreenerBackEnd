@@ -1,11 +1,11 @@
-package BitProject.Greener.domain.boards;
+package BitProject.Greener.boards;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import BitProject.Greener.common.BaseEntity;
-import BitProject.Greener.domain.members.Members;
+import BitProject.Greener.domain.members.domain.Entity.UserEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -26,7 +26,7 @@ public class Boards extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "members_id", referencedColumnName = "id")
-    private Members members;
+    private UserEntity userEntity;
 
     @Column(nullable = false)
     private String title;
@@ -48,8 +48,8 @@ public class Boards extends BaseEntity {
         instance.boardsType = boardsType;
         return instance;
     }
-    public void mapMembers(Members members) {
-        this.members = members;
+    public void mapMembers(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
 }

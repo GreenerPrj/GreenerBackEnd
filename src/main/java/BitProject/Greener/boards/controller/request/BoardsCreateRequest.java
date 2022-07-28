@@ -1,6 +1,6 @@
-package BitProject.Greener.domain.boards.controller.request;
+package BitProject.Greener.boards.controller.request;
 
-import BitProject.Greener.domain.boards.BoardsType;
+import BitProject.Greener.boards.BoardsType;
 import lombok.Getter;
 
 @Getter

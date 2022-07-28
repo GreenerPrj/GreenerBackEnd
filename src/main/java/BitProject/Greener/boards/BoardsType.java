@@ -1,4 +1,4 @@
-package BitProject.Greener.domain.boards;
+package BitProject.Greener.boards;
 
 public enum BoardsType {
 

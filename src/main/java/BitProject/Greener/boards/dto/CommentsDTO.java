@@ -1,6 +1,6 @@
-package BitProject.Greener.domain.boards.dto;
+package BitProject.Greener.boards.dto;
 
-import BitProject.Greener.domain.boards.Comments;
+import BitProject.Greener.boards.Comments;
 import lombok.Getter;
 
 @Getter

@@ -1,4 +1,4 @@
-package BitProject.Greener.domain.boards.controller.request;
+package BitProject.Greener.boards.controller.request;
 
 import lombok.Getter;
 
