@@ -1,22 +1,20 @@
 package BitProject.Greener.domain.plants.service;
 
-import BitProject.Greener.domain.members.Domain.Entity.UserEntity;
+import BitProject.Greener.domain.members.Members;
 import BitProject.Greener.domain.members.repository.MembersRepository;
-import BitProject.Greener.domain.plants.Entity.MyPlants;
-import BitProject.Greener.domain.plants.Entity.Plants;
+import BitProject.Greener.domain.plants.MyPlants;
+import BitProject.Greener.domain.plants.Plants;
 import BitProject.Greener.domain.plants.controller.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.plants.dto.MyPlantsDTO;
 import BitProject.Greener.domain.plants.repository.MyPlantsRepository;
 import BitProject.Greener.domain.plants.repository.PlantsRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Log4j2
 public class PlantsService {
 
     private final PlantsRepository plantsRepository;
@@ -24,9 +22,7 @@ public class PlantsService {
     private final MembersRepository membersRepository;
 
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request) {
-
-
-        UserEntity members = membersRepository.findById(request.getMembersId())
+        Members members = membersRepository.findById(request.getMembersId())
             .orElseThrow(() -> new RuntimeException("아이디 없음"));
         Plants plants = plantsRepository.findById(request.getPlantsId())
             .orElseThrow(() -> new RuntimeException("식물 없음"));

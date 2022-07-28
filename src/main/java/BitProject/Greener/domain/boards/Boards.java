@@ -1,22 +1,23 @@
-package BitProject.Greener.domain.members.config.boards;
+package BitProject.Greener.domain.boards;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import BitProject.Greener.common.BaseEntity;
-import BitProject.Greener.domain.members.Domain.Entity.UserEntity;
+import BitProject.Greener.domain.members.Members;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Comments extends BaseEntity {
+public class Boards extends BaseEntity {
 
     @GeneratedValue(strategy = IDENTITY)
     @Id
@@ -24,24 +25,31 @@ public class Comments extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "boards_id", referencedColumnName = "id")
-    private Boards boards;
-
-    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "members_id", referencedColumnName = "id")
-    private UserEntity members;
+    private Members members;
+
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
     private String content;
 
-    public static Comments of(String content) {
-        Comments instance = new Comments();
+    @Column(nullable = false)
+    private String imagePath;
+
+    @Enumerated(STRING)
+    private BoardsType boardsType;
+
+    public static Boards of(String title,String content, String imagePath, BoardsType boardsType){
+        Boards instance = new Boards();
+        instance.title = title;
         instance.content = content;
+        instance.imagePath = imagePath;
+        instance.boardsType = boardsType;
         return instance;
     }
-    public void mapMembersAndBoards(UserEntity members, Boards boards) {
+    public void mapMembers(Members members) {
         this.members = members;
-        this.boards = boards;
     }
 
 }

@@ -1,8 +1,9 @@
-package BitProject.Greener.domain.plants.Entity;
+package BitProject.Greener.domain.members;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 import BitProject.Greener.common.BaseEntity;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class Plants extends BaseEntity {
+public class Members extends BaseEntity {
 
     @GeneratedValue(strategy = IDENTITY)
     @Id
@@ -22,19 +23,21 @@ public class Plants extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private String content;
+    private String email;
 
     @Column(nullable = false)
-    private Integer sunShine;
+    private String password;
 
     @Column(nullable = false)
-    private Integer water;
+    private String address;
 
     @Column(nullable = false)
-    private Integer temperature;
+    private String detailAddress;
 
+    @Column(nullable = false)
+    private LocalDateTime birthday;
 
-
-
+    @Column(nullable = false)
+    private String nickName;
 
 }

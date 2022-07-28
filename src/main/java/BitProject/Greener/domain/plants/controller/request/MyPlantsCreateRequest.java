@@ -1,7 +1,13 @@
 package BitProject.Greener.domain.plants.controller.request;
 
-import java.time.LocalDateTime;
+import static javax.persistence.FetchType.LAZY;
 
+import BitProject.Greener.domain.members.Members;
+import BitProject.Greener.domain.plants.Plants;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Getter;
 
 @Getter

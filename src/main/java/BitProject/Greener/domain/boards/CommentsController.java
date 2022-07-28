@@ -1,4 +1,4 @@
-package BitProject.Greener.domain.members.config.boards;
+package BitProject.Greener.domain.boards;
 
 
 import lombok.RequiredArgsConstructor;

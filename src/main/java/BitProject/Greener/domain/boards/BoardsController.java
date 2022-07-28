@@ -1,6 +1,9 @@
-package BitProject.Greener.domain.members.config.boards;
+package BitProject.Greener.domain.boards;
 
 
+import BitProject.Greener.domain.boards.BoardsCreateRequest;
+import BitProject.Greener.domain.boards.BoardsDTO;
+import BitProject.Greener.domain.boards.BoardsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -26,10 +24,8 @@ abstract public class BaseEntity extends AbstractAggregateRoot<BaseEntity> imple
         this.deletedDateTime = LocalDateTime.now();
     }
 
-    @PrePersist
-    public void createDateTime() {
-        this.createdDateTime= LocalDateTime.now();
+    public LocalDateTime createDateTime() {
+        return createdDateTime;
     }
-
 
 }

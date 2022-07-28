@@ -1,6 +1,6 @@
 package BitProject.Greener.domain.plants.repository;
 
-import BitProject.Greener.domain.plants.Entity.MyPlants;
+import BitProject.Greener.domain.plants.MyPlants;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
