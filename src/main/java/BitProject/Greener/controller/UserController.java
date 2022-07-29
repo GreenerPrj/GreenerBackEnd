@@ -1,7 +1,5 @@
 package BitProject.Greener.controller;
 
-
-
 import BitProject.Greener.domain.dto.UserDto;
 import BitProject.Greener.domain.entity.TokenEntity;
 import BitProject.Greener.domain.entity.UserEntity;

@@ -23,8 +23,7 @@ public class BoardsService {
     private final UserRepository userRepository;
 
     public BoardsDTO createBoards(BoardsCreateRequest request) {
-        UserEntity userEntity = userRepository.findById(request.getMembersid())
-                .orElseThrow(() -> new RuntimeException("아이디 없음"));
+        UserEntity userEntity = userRepository.findById(request.getMembersid()).orElseThrow(() -> new RuntimeException("아이디 없음"));
         Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getImagePath(), request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);

@@ -19,7 +19,6 @@ import lombok.Getter;
 public class MyPlants extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     @Id
-    @Column(nullable = false)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
