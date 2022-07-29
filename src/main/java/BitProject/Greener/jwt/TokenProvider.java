@@ -90,7 +90,7 @@ public class TokenProvider {
     }
 
 
-    public String tokenstore(UserEntity user) {
+    public TokenEntity tokenstore(UserEntity user) {
         String accessToken = accessToken(user);
         String refreshToken = refreshToken();
 
@@ -100,7 +100,7 @@ public class TokenProvider {
                 .refresh(refreshToken)
                 .build();
         tokenRespository.save(responsetoken);
-        return accessToken;
+        return responsetoken;
     }
 
 

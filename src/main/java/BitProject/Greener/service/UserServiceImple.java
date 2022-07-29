@@ -3,6 +3,7 @@ package BitProject.Greener.service;
 
 
 import BitProject.Greener.domain.dto.UserDto;
+import BitProject.Greener.domain.entity.TokenEntity;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.UserRepository;
@@ -11,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -46,8 +48,10 @@ public class UserServiceImple implements UserService {
         return null;
     }
 
-    public String tokenstore(UserEntity user){
-        String accessToken =tokenProvider.tokenstore(user);
+    public String tokenstore(UserEntity user, HttpServletResponse response){
+        TokenEntity a =tokenProvider.tokenstore(user);
+        String accessToken = a.getAccess();
+        response.setHeader("access",a.getAccess());
         return accessToken;
     }
 }
