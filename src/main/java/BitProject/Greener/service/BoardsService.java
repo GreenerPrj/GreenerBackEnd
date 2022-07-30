@@ -1,7 +1,7 @@
 package BitProject.Greener.service;
 
 import BitProject.Greener.domain.entity.Boards;
-import BitProject.Greener.controller.request.BoardsCreateRequest;
+import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.UserRepository;

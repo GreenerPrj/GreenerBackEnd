@@ -1,6 +1,6 @@
 package BitProject.Greener.controller;
 
-import BitProject.Greener.controller.request.MyPlantsCreateRequest;
+import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.service.PlantsService;
 import lombok.RequiredArgsConstructor;

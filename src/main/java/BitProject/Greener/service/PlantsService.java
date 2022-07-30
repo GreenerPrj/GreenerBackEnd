@@ -2,10 +2,11 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.JwtAuthenticationFilter;
+import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.domain.entity.MyPlants;
 import BitProject.Greener.domain.entity.Plants;
-import BitProject.Greener.controller.request.MyPlantsCreateRequest;
+import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.repository.MyPlantsRepository;
 import BitProject.Greener.repository.PlantsRepository;
@@ -25,11 +26,11 @@ public class PlantsService {
     private final PlantsRepository plantsRepository;
     private final MyPlantsRepository myPlantsRepository;
     private final UserRepository userRepository;
-    private  final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final TokenProvider tokenProvider;
 
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, HttpServletRequest request2) {
-        String token = jwtAuthenticationFilter.parseBearerToken(request2);
-        String username = jwtAuthenticationFilter.tokenencry(token);
+        String token = tokenProvider.parseBearerToken(request2);
+        String username = tokenProvider.tokenEncry(token);
         UserEntity userEntity = userRepository.findByEmail(username);
         Plants plants = plantsRepository.findById(request.getPlantsId()).orElseThrow(() -> new RuntimeException("식물 없음"));
         // MyPlants생성 -> static 생성자 사용(빌더패턴 사용해도 무방)

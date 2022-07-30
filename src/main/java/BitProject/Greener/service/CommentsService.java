@@ -2,7 +2,7 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.entity.Comments;
-import BitProject.Greener.controller.request.CommentsCreateRequest;
+import BitProject.Greener.domain.dto.request.CommentsCreateRequest;
 import BitProject.Greener.domain.dto.CommentsDTO;
 import BitProject.Greener.repository.BoardsRepository;
 import BitProject.Greener.repository.CommentsRepository;

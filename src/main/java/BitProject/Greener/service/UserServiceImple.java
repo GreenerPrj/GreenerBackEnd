@@ -1,7 +1,5 @@
 package BitProject.Greener.service;
 
-
-
 import BitProject.Greener.domain.dto.UserDto;
 import BitProject.Greener.domain.entity.TokenEntity;
 import BitProject.Greener.domain.entity.UserEntity;
@@ -11,13 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
-
-
 @Log4j2
 @RequiredArgsConstructor
 @Service

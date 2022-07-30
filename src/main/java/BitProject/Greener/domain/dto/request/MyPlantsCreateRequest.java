@@ -1,4 +1,4 @@
-package BitProject.Greener.controller.request;
+package BitProject.Greener.domain.dto.request;
 
 import java.time.LocalDateTime;
 

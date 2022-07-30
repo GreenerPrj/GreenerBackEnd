@@ -5,7 +5,6 @@ import BitProject.Greener.common.RoleType;
 import BitProject.Greener.domain.entity.UserEntity;
 import lombok.Builder;
 import lombok.Data;
-
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;

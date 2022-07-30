@@ -1,16 +1,12 @@
 package BitProject.Greener.controller;
 
 import BitProject.Greener.domain.dto.UserDto;
-import BitProject.Greener.domain.entity.TokenEntity;
 import BitProject.Greener.domain.entity.UserEntity;
-import BitProject.Greener.repository.TokenRespository;
 import BitProject.Greener.service.UserServiceImple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -22,7 +18,6 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserServiceImple userService;
-    private final TokenRespository tokenRespository;
 
 
 
@@ -45,11 +40,10 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserDto userDto, HttpServletResponse response){
-        UserEntity user = userService.getByCredentials(userDto.getEmail(),userDto.getPassword());
+        UserEntity user = userService.getByCredentials(userDto.getEmail(),userDto.getPassword()); //id, pw check
 
         if(user!=null){
             String a = userService.tokenstore(user,response);
-            TokenEntity tokenEntity = tokenRespository.findByEmail(user.getEmail());
             return ResponseEntity.ok().body("login succes");
         }
         else{
