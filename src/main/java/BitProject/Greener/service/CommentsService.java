@@ -1,5 +1,6 @@
 package BitProject.Greener.service;
 
+import BitProject.Greener.controller.request.CommentsUpdateRequest;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.entity.Comments;
 import BitProject.Greener.controller.request.CommentsCreateRequest;
@@ -30,5 +31,21 @@ public class CommentsService {
         comments.mapMembersAndBoards(userEntity, boards);
         commentsRepository.save(comments);
         return CommentsDTO.convertToDTO(comments);
+    }
+
+    public Long update(Long id, CommentsUpdateRequest commentsUpdateRequest){
+        Comments comments = commentsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        comments.update(commentsUpdateRequest.getContent());
+
+        return id;
+    }
+
+    public void delete(Long id) {
+        Comments comments = commentsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        commentsRepository.delete(comments);
     }
 }

@@ -39,6 +39,11 @@ public class Comments extends BaseEntity {
         instance.content = content;
         return instance;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
+
     public void mapMembersAndBoards(UserEntity userEntity, Boards boards) {
         this.userEntity = userEntity;
         this.boards = boards;

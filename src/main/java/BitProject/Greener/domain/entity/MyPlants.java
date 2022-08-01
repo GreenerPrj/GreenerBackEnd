@@ -48,6 +48,12 @@ public class MyPlants extends BaseEntity {
         return instance;
     }
 
+    public void update(String name, LocalDateTime bornDate, String imagePath) {
+        this.name = name;
+        this.bornDate = bornDate;
+        this.imagePath = imagePath;
+    }
+
     public void mapMembersAndPlants(UserEntity userEntity, Plants plants){
         this.userEntity = userEntity;
         this.plants = plants;

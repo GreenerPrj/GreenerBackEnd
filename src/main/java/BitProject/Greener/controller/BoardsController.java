@@ -1,6 +1,7 @@
 package BitProject.Greener.controller;
 
 
+import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.service.BoardsService;
@@ -23,6 +24,15 @@ public class BoardsController {
     @PostMapping()
     public ResponseEntity<BoardsDTO> create(@RequestBody BoardsCreateRequest request) {
         return ResponseEntity.ok(boardsService.createBoards(request));
+    }
+    @PutMapping("/api/v1/boards")
+    public Long update(@PathVariable Long id, @RequestBody BoardsUpdateRequest boardsUpdateRequest) {
+        return boardsService.update(id,boardsUpdateRequest);
+    }
+
+    @DeleteMapping("/api/v1/boards")
+    public void delete(@PathVariable Long id){
+        boardsService.delete(id);
     }
 
     @GetMapping("/list")

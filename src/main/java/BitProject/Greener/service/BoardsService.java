@@ -1,5 +1,6 @@
 package BitProject.Greener.service;
 
+import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.controller.request.BoardsCreateRequest;
 import BitProject.Greener.domain.dto.BoardsDTO;
@@ -29,6 +30,25 @@ public class BoardsService {
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
         return BoardsDTO.convertToDTO(boards);
+    }
+
+    public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest) {
+        Boards boards = boardsRepository.findById(id)
+                .orElseThrow(() -> new
+                        IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        boards.update(boardsUpdateRequest.getTitle(),
+                boardsUpdateRequest.getContent(),
+                boardsUpdateRequest.getImagePath());
+
+        return id;
+    }
+
+    public void delete(Long id){
+        Boards boards = boardsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+
+        boardsRepository.delete(boards);
     }
 
     public List<Boards> reading(){

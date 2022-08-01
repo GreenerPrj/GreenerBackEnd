@@ -1,5 +1,6 @@
 package BitProject.Greener.service;
 
+import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.domain.entity.MyPlants;
@@ -36,4 +37,24 @@ public class PlantsService {
         return MyPlantsDTO.convertToDTO(myPlants);
 
     }
+
+    public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest){
+        MyPlants myPlants = myPlantsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
+
+        myPlants.update(myPlantsUpdateRequest.getName(),
+                myPlantsUpdateRequest.getBornDate(),
+                myPlantsUpdateRequest.getImagePath());
+
+        return id;
+    }
+
+    public void delete(Long id){
+        MyPlants myPlants = myPlantsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
+
+            myPlantsRepository.delete(myPlants);
+    }
 }
+
+

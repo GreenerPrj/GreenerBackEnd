@@ -50,6 +50,12 @@ public class Boards extends BaseEntity {
         instance.boardsType = boardsType;
         return instance;
     }
+
+    public void update(String title, String imagePath, String content) {
+        this.title = title;
+        this.imagePath = imagePath;
+        this.content = content;
+    }
     public void mapMembers(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
