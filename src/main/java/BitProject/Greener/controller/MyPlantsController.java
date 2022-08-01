@@ -27,7 +27,7 @@ public class MyPlantsController {
 
     @PutMapping()
     public Long update(@PathVariable Long id, @RequestBody MyPlantsUpdateRequest myPlantsUpdateRequest){
-        return plantsService.update(id, myPlantsUpdateRequest)
+        return plantsService.update(id, myPlantsUpdateRequest);
     }
 
     @DeleteMapping()

@@ -89,12 +89,17 @@ public class BoardsService {
     }
 
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId){
+        // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
             .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
-        Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boardsId);
+        // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
+        Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
+        // 우선 board는 필수니까 DTO로 변환해주고
         BoardsWithBoardFilesDTO boardsWithBoardFilesDTO = BoardsWithBoardFilesDTO.convertToBoardDTO(
             boards);
+        // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
+        // 리턴해주면 끝
         return boardsWithBoardFilesDTO;
     }
 }
