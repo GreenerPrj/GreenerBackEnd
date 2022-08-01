@@ -31,6 +31,10 @@ public class Comments extends BaseEntity {
     @JoinColumn(name = "members_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_comments_id")
+    private Comments parentComments;
+
     @Column(nullable = false)
     private String content;
 
@@ -47,6 +51,12 @@ public class Comments extends BaseEntity {
     public void mapMembersAndBoards(UserEntity userEntity, Boards boards) {
         this.userEntity = userEntity;
         this.boards = boards;
+    }
+
+    public void mapMembersAndBoardsAndParentComments(UserEntity userEntity, Boards boards, Comments parentComments){
+        this.userEntity = userEntity;
+        this.boards = boards;
+        this.parentComments=parentComments;
     }
 
 }

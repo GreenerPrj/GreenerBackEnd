@@ -7,6 +7,8 @@ public class CommentsCreateRequest {
 
     private Long boardsid;
 
+    private Long parentCommentsId;
+
     private Long membersid;
 
     private String title;

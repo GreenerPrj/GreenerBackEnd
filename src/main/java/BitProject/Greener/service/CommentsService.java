@@ -9,6 +9,7 @@ import BitProject.Greener.repository.BoardsRepository;
 import BitProject.Greener.repository.CommentsRepository;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.UserRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,18 +25,27 @@ public class CommentsService {
 
     public CommentsDTO createComments(CommentsCreateRequest request) {
         Boards boards = boardsRepository.findById(request.getBoardsid())
-                .orElseThrow(() -> new RuntimeException("게시글 없음"));
+            .orElseThrow(() -> new RuntimeException("게시글 없음"));
         UserEntity userEntity = userRepository.findById(request.getMembersid())
-                .orElseThrow(() -> new RuntimeException("아이디 없음"));
-        Comments comments = Comments.of(request.getContent());
-        comments.mapMembersAndBoards(userEntity, boards);
-        commentsRepository.save(comments);
-        return CommentsDTO.convertToDTO(comments);
+            .orElseThrow(() -> new RuntimeException("아이디 없음"));
+        if (Objects.nonNull(request.getParentCommentsId())) {
+            Comments parentComments = commentsRepository.findById(request.getParentCommentsId())
+                .orElseThrow(() -> new RuntimeException("상위 댓글이 존재하지 않습니다."));
+            Comments childComments = Comments.of(request.getContent());
+            childComments.mapMembersAndBoardsAndParentComments(userEntity, boards, parentComments);
+            return CommentsDTO.convertToDTO(childComments);
+        } else {
+            Comments comments = Comments.of(request.getContent());
+            comments.mapMembersAndBoards(userEntity, boards);
+            commentsRepository.save(comments);
+            return CommentsDTO.convertToDTO(comments);
+        }
+
     }
 
-    public Long update(Long id, CommentsUpdateRequest commentsUpdateRequest){
+    public Long update(Long id, CommentsUpdateRequest commentsUpdateRequest) {
         Comments comments = commentsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
         comments.update(commentsUpdateRequest.getContent());
 
@@ -44,7 +54,7 @@ public class CommentsService {
 
     public void delete(Long id) {
         Comments comments = commentsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
         commentsRepository.delete(comments);
     }
