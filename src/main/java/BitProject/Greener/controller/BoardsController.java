@@ -6,12 +6,10 @@ import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.service.BoardsService;
-<<<<<<< HEAD
-import BitProject.Greener.controller.request.BoardsCreateRequest;
-import lombok.Getter;
-=======
+
+
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
->>>>>>> 91775ec96c490597ceea36ec7e5b2c47a58409c6
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
