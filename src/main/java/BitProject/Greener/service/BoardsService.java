@@ -13,6 +13,7 @@ import BitProject.Greener.repository.BoardsRepository;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -106,6 +107,12 @@ public class BoardsService {
 
     public List<BoardsDTO> getAllBoards(){
         List<Boards> boardsList = boardsRepository.findAll();
-        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
+        List<BoardsDTO> boardsDTOList = new ArrayList<>();
+
+        for(Boards boards : boardsList){
+            boardsDTOList.add(BoardsDTO.convertToDTO(boards));
+        }
+        return boardsDTOList;
+//        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
     }
 }
