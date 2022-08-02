@@ -86,6 +86,7 @@ public class BoardsService {
         boardsRepository.delete(boards);
     }
 
+    @Transactional(readOnly = true)
     public List<BoardsDTO> getAllBoards(){
         List<Boards> boardsList = boardsRepository.findAll();
         List<BoardsDTO> boardsDTOList = new ArrayList<>();
@@ -107,6 +108,7 @@ public class BoardsService {
         return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId){
         // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
