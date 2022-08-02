@@ -2,6 +2,7 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
+import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -102,5 +104,13 @@ public class BoardsService {
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
         // 리턴해주면 끝
         return boardsWithBoardFilesDTO;
+    }
+
+    public List<BoardsWithUserDTO> getBoardsWithUserDTO(){
+
+        List<Boards> boardList = boardsRepository.findAllWithUser();
+        return boardList.stream().map(board -> {
+            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
+        }).collect(Collectors.toList());
     }
 }

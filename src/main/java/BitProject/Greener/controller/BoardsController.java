@@ -3,6 +3,7 @@ package BitProject.Greener.controller;
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
+import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.service.BoardsService;
@@ -42,10 +43,11 @@ public class BoardsController {
         boardsService.delete(id);
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> reading(){
-        List<Boards> list = boardsService.reading();
-        return ResponseEntity.ok().body(list);
+
+
+    @GetMapping()
+    public ResponseEntity<List<BoardsWithUserDTO>> getBoardsWithUserDTO(){
+        return ResponseEntity.ok(boardsService.getBoardsWithUserDTO());
     }
 
     @GetMapping("/{boardsId}/detail")
