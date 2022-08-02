@@ -31,13 +31,13 @@ public class BoardsController {
         return ResponseEntity.ok(boardsService.createBoards(request, file));
     }
 
-    @PutMapping("/api/v1/boards")
+    @PutMapping()
     public Long update(@PathVariable Long id,
         @RequestBody BoardsUpdateRequest boardsUpdateRequest) {
         return boardsService.update(id, boardsUpdateRequest);
     }
 
-    @DeleteMapping("/api/v1/boards")
+    @DeleteMapping()
     public void delete(@PathVariable Long id) {
         boardsService.delete(id);
     }
