@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -101,5 +102,10 @@ public class BoardsService {
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
         // 리턴해주면 끝
         return boardsWithBoardFilesDTO;
+    }
+
+    public List<BoardsDTO> getAllBoards(){
+        List<Boards> boardsList = boardsRepository.findAll();
+        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
     }
 }

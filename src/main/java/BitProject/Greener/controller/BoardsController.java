@@ -30,27 +30,34 @@ public class BoardsController {
         @RequestBody BoardsCreateRequest request) {
         return ResponseEntity.ok(boardsService.createBoards(request, file));
     }
+
     @PutMapping("/api/v1/boards")
-    public Long update(@PathVariable Long id, @RequestBody BoardsUpdateRequest boardsUpdateRequest) {
-        return boardsService.update(id,boardsUpdateRequest);
+    public Long update(@PathVariable Long id,
+        @RequestBody BoardsUpdateRequest boardsUpdateRequest) {
+        return boardsService.update(id, boardsUpdateRequest);
     }
 
     @DeleteMapping("/api/v1/boards")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         boardsService.delete(id);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> reading(){
+    public ResponseEntity<?> reading() {
         List<Boards> list = boardsService.reading();
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/v2/list")
+    public ResponseEntity<List<BoardsDTO>> getAllBoards() {
+        return ResponseEntity.ok(boardsService.getAllBoards());
     }
 
     @GetMapping("/{boardsId}/detail")
     public ResponseEntity<BoardsWithBoardFilesDTO> detail(
         @PathVariable Long boardsId
-    ){
-       return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
+    ) {
+        return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
     }
 
 }
