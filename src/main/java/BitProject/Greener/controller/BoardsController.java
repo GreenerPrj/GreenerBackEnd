@@ -42,13 +42,9 @@ public class BoardsController {
         boardsService.delete(id);
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> reading() {
-        List<Boards> list = boardsService.reading();
-        return ResponseEntity.ok().body(list);
-    }
 
-    @GetMapping("/v2/list")
+
+    @GetMapping("/list")
     public ResponseEntity<List<BoardsDTO>> getAllBoards() {
         return ResponseEntity.ok(boardsService.getAllBoards());
     }

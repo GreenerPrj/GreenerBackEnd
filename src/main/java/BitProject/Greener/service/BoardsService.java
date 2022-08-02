@@ -86,24 +86,25 @@ public class BoardsService {
         boardsRepository.delete(boards);
     }
 
-    public List<Boards> reading(){
-        return boardsRepository.findAll();
-    }
-
     public List<BoardsDTO> getAllBoards(){
         List<Boards> boardsList = boardsRepository.findAll();
         List<BoardsDTO> boardsDTOList = new ArrayList<>();
 
-        for(int i = 0; i < boardsList.size(); i++){
+        /* 버전1
+            for(int i = 0; i < boardsList.size(); i++){
             Boards boards = boardsList.get(i);
             BoardsDTO boardsDTO = BoardsDTO.convertToDTO(boards);
             boardsDTOList.add(boardsDTO);
         }
-//        for(Boards boards : boardsList){
-//            boardsDTOList.add(BoardsDTO.convertToDTO(boards));
-//        }
-        return boardsDTOList;
-//        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
+         */
+
+        /* 버전 2
+            for(Boards boards : boardsList){
+            boardsDTOList.add(BoardsDTO.convertToDTO(boards));
+        }
+         */
+
+        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
     }
 
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId){
