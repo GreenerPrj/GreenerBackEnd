@@ -4,7 +4,7 @@ import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
-import BitProject.Greener.controller.request.BoardsCreateRequest;
+import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.BoardFilesRepository;
@@ -32,11 +32,16 @@ public class BoardsService {
     private final BoardsRepository boardsRepository;
     private final UserRepository userRepository;
 
+<<<<<<< HEAD
     private final BoardFilesRepository boardFilesRepository;
 
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
         UserEntity userEntity = userRepository.findById(request.getMembersid())
                 .orElseThrow(() -> new RuntimeException("아이디 없음"));
+=======
+    public BoardsDTO createBoards(BoardsCreateRequest request) {
+        UserEntity userEntity = userRepository.findById(request.getMembersid()).orElseThrow(() -> new RuntimeException("아이디 없음"));
+>>>>>>> 91775ec96c490597ceea36ec7e5b2c47a58409c6
         Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getImagePath(), request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
