@@ -90,6 +90,22 @@ public class BoardsService {
         return boardsRepository.findAll();
     }
 
+    public List<BoardsDTO> getAllBoards(){
+        List<Boards> boardsList = boardsRepository.findAll();
+        List<BoardsDTO> boardsDTOList = new ArrayList<>();
+
+        for(int i = 0; i < boardsList.size(); i++){
+            Boards boards = boardsList.get(i);
+            BoardsDTO boardsDTO = BoardsDTO.convertToDTO(boards);
+            boardsDTOList.add(boardsDTO);
+        }
+//        for(Boards boards : boardsList){
+//            boardsDTOList.add(BoardsDTO.convertToDTO(boards));
+//        }
+        return boardsDTOList;
+//        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
+    }
+
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId){
         // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
@@ -105,14 +121,5 @@ public class BoardsService {
         return boardsWithBoardFilesDTO;
     }
 
-    public List<BoardsDTO> getAllBoards(){
-        List<Boards> boardsList = boardsRepository.findAll();
-        List<BoardsDTO> boardsDTOList = new ArrayList<>();
 
-        for(Boards boards : boardsList){
-            boardsDTOList.add(BoardsDTO.convertToDTO(boards));
-        }
-        return boardsDTOList;
-//        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
-    }
 }
