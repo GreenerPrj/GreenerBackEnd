@@ -36,7 +36,8 @@ public class BoardsWithUserDTO {
         instance.userId = userEntity.getId();
         instance.name = userEntity.getName();
         instance.email = userEntity.getEmail();
-        instance.nickName = userEntity.getNickName();;
+        instance.nickName = userEntity.getNickName();
 
+        return instance;
     }
 }
