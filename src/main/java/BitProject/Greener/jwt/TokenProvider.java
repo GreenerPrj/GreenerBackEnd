@@ -1,7 +1,5 @@
 package BitProject.Greener.jwt;
 
-
-
 import BitProject.Greener.domain.entity.TokenEntity;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.TokenRespository;
@@ -13,14 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
-
-
 
 @Log4j2
 @Component
@@ -37,7 +34,7 @@ public class TokenProvider {
         secret_key = Base64.getEncoder().encodeToString(secret_key.getBytes());
     }
 
-    public  String accessToken(UserEntity userEntity){
+    public  String accessToken(UserEntity userEntity){  //access token 발급
         Date expiryDate = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
         Claims claims = Jwts.claims().setSubject(userEntity.getEmail());
 
@@ -50,7 +47,7 @@ public class TokenProvider {
                 .compact();
     }
 
-    public  String refreshToken(){
+    public  String refreshToken(){  // refresh token 발급
         Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
 
         return Jwts.builder()
@@ -63,9 +60,7 @@ public class TokenProvider {
     }
 
     public boolean tokenvaild(String email){
-        UserEntity user = UserEntity.builder()
-                .email(email)
-                .build();
+        UserEntity user = UserEntity.builder().email(email).build();
 
         try {// access 만료, refresh 유효 하면   accesstoken랑 refreshtoken 재발급
             // refreshtoken이 유효하지 않으면 403
@@ -90,7 +85,7 @@ public class TokenProvider {
     }
 
 
-    public TokenEntity tokenstore(UserEntity user) {
+    public TokenEntity tokenstore(UserEntity user) {  // token 발급후 저장
         String accessToken = accessToken(user);
         String refreshToken = refreshToken();
 
@@ -104,4 +99,21 @@ public class TokenProvider {
     }
 
 
+    public String tokenEncry(String token){  // 토큰 파싱
+        String claims = Jwts.parser()
+                .setSigningKey(secret_key)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+        return claims;
+    }
+
+
+    public String parseBearerToken(HttpServletRequest request) {   // Http 리퀘스트의 헤더를 파싱해 Bearer 토큰을 리턴한다.
+        String bearerToken = request.getHeader("accessToken");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }

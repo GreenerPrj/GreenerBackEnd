@@ -20,7 +20,6 @@ public class Comments extends BaseEntity {
 
     @GeneratedValue(strategy = IDENTITY)
     @Id
-    @Column(nullable = false)
     private Long id;
 
     @ManyToOne(fetch = LAZY)

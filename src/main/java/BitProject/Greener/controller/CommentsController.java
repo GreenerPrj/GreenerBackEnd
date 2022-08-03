@@ -3,7 +3,7 @@ package BitProject.Greener.controller;
 
 import BitProject.Greener.controller.request.CommentsUpdateRequest;
 import BitProject.Greener.domain.dto.CommentsDTO;
-import BitProject.Greener.controller.request.CommentsCreateRequest;
+import BitProject.Greener.domain.dto.request.CommentsCreateRequest;
 import BitProject.Greener.service.CommentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

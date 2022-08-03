@@ -15,7 +15,6 @@ public class Plants extends BaseEntity {
 
     @GeneratedValue(strategy = IDENTITY)
     @Id
-    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)
