@@ -35,7 +35,7 @@ public class TokenProvider {
     }
 
     public  String accessToken(UserEntity userEntity){  //access token 발급
-        Date expiryDate = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
+        Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         Claims claims = Jwts.claims().setSubject(userEntity.getEmail());
 
         return Jwts.builder()
@@ -111,6 +111,7 @@ public class TokenProvider {
 
     public String parseBearerToken(HttpServletRequest request) {   // Http 리퀘스트의 헤더를 파싱해 Bearer 토큰을 리턴한다.
         String bearerToken = request.getHeader("accessToken");
+        log.info(bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

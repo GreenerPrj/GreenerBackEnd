@@ -2,19 +2,20 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
+import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
 
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.entity.UserEntity;
+import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.BoardFilesRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,13 +38,16 @@ public class BoardsService {
 
     private final BoardsRepository boardsRepository;
     private final UserRepository userRepository;
-
+    private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
 
-    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
-        UserEntity userEntity = userRepository.findById(request.getMembersid())
-                .orElseThrow(() -> new RuntimeException("아이디 없음"));
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getImagePath(), request.getBoardsType());
+    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
+        String token = tokenProvider.parseBearerToken(request2);
+        String userid = tokenProvider.tokenEncry(token);
+        UserEntity userEntity = userRepository.findByEmail(userid);
+//        .orElseThrow(() -> new RuntimeException("아이디 없음"));
+        log.info("123"+userEntity.getNickName());
+        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(),request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
 
@@ -74,8 +81,7 @@ public class BoardsService {
                         IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
         boards.update(boardsUpdateRequest.getTitle(),
-                boardsUpdateRequest.getContent(),
-                boardsUpdateRequest.getImagePath());
+                boardsUpdateRequest.getContent());
 
         return id;
     }
@@ -87,29 +93,10 @@ public class BoardsService {
         boardsRepository.delete(boards);
     }
 
-    @Transactional(readOnly = true)
-    public List<BoardsDTO> getAllBoards(){
-        List<Boards> boardsList = boardsRepository.findAll();
-        List<BoardsDTO> boardsDTOList = new ArrayList<>();
-
-        /* 버전1
-            for(int i = 0; i < boardsList.size(); i++){
-            Boards boards = boardsList.get(i);
-            BoardsDTO boardsDTO = BoardsDTO.convertToDTO(boards);
-            boardsDTOList.add(boardsDTO);
-        }
-         */
-
-        /* 버전 2
-            for(Boards boards : boardsList){
-            boardsDTOList.add(BoardsDTO.convertToDTO(boards));
-        }
-         */
-
-        return boardsList.stream().map(BoardsDTO::convertToDTO).collect(Collectors.toList());
+    public List<Boards> reading(){
+        return boardsRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId){
         // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
@@ -125,5 +112,16 @@ public class BoardsService {
         return boardsWithBoardFilesDTO;
     }
 
+    public List<BoardsWithUserDTO> getBoardsWithUserDTO(){
+
+        List<Boards> boardList = boardsRepository.findAllWithUser();
+        log.info(boardList.stream().map(board -> {
+            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
+        }).collect(Collectors.toList()));
+        return boardList.stream().map(board -> {
+            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
+        }).collect(Collectors.toList());
+
+    }
 
 }

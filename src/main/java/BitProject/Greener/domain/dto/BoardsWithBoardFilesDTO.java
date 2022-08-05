@@ -17,6 +17,7 @@ public class BoardsWithBoardFilesDTO {
     private Long boardFilesId;
     private String fileName;
     private String filePath;
+    private String nickName;
 
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();
@@ -24,6 +25,7 @@ public class BoardsWithBoardFilesDTO {
         instance.title = boards.getTitle();
         instance.content = boards.getContent();
         instance.createDate = boards.createDateTime();
+        instance.nickName = boards.getNickName();
         return instance;
     }
 

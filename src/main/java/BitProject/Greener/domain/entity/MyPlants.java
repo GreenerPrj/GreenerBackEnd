@@ -38,12 +38,23 @@ public class MyPlants extends BaseEntity {
     @Column(nullable = false)
     private String imagePath;
 
+    @Column(nullable = false)
+    private String originFileName;
 
-    public static MyPlants of(String name, LocalDateTime bornDate, String imagePath){
+    @Column(nullable = false)
+    private String fileName;
+
+    @Column(nullable = false)
+    private String filePath;
+
+
+    public static MyPlants of(String name, LocalDateTime bornDate,String originFileName, String fileName, String filePath){
         MyPlants instance = new MyPlants();
         instance.name = name;
         instance.bornDate = bornDate;
-        instance.imagePath = imagePath;
+        instance.originFileName = originFileName;
+        instance.fileName = fileName;
+        instance.filePath = filePath;
         return instance;
     }
 
