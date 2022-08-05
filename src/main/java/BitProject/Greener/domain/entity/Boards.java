@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 
 import BitProject.Greener.common.BoardsType;
 import lombok.Getter;
+import org.springframework.data.util.Lazy;
 
 @Entity
 @Getter
@@ -30,29 +31,30 @@ public class Boards extends BaseEntity {
     private UserEntity userEntity;
 
     @Column(nullable = false)
+    private String nickName;
+
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String imagePath;
 
     @Enumerated(STRING)
     private BoardsType boardsType;
 
-    public static Boards of(String title,String content, String imagePath, BoardsType boardsType){
+
+    public static Boards of(String title,String content, String nickName ,BoardsType boardsType){
         Boards instance = new Boards();
         instance.title = title;
         instance.content = content;
-        instance.imagePath = imagePath;
         instance.boardsType = boardsType;
+        instance.nickName = nickName;
         return instance;
     }
 
-    public void update(String title, String imagePath, String content) {
+    public void update(String title, String content) {
         this.title = title;
-        this.imagePath = imagePath;
         this.content = content;
     }
     public void mapMembers(UserEntity userEntity) {

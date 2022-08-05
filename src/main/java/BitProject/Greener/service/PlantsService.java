@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,7 +39,7 @@ public class PlantsService {
         UserEntity userEntity = userRepository.findByEmail(username);
         Plants plants = plantsRepository.findById(request.getPlantsId()).orElseThrow(() -> new RuntimeException("식물 없음"));
         // MyPlants생성 -> static 생성자 사용(빌더패턴 사용해도 무방)
-        MyPlants myPlants = MyPlants.of(request.getName(), request.getBornDate(), request.getImagePath());
+        MyPlants myPlants = MyPlants.of(request.getName(), request.getBornDate(), request.getOriginFileName(),request.getFileName(),request.getFilePath());
         // 외래키 등록(연관관계 매핑)
         myPlants.mapMembersAndPlants(userEntity, plants);
         // 저장
@@ -62,6 +66,25 @@ public class PlantsService {
 
             myPlantsRepository.delete(myPlants);
     }
+
+    public List<MyPlantsDTO> getAllMyPlants(){
+    List<MyPlants> myPlantsList = myPlantsRepository.findAll();
+    List<MyPlantsDTO> myPlantsDTOList = new ArrayList<>();
+
+    for (MyPlants myPlants : myPlantsList) {
+        myPlantsDTOList.add(MyPlantsDTO.convertToDTO(myPlants));
+    }
+    return myPlantsDTOList;
+
+    }
+
+    public MyPlantsDTO getDetailWithMyPlants(Long myplantsId){
+
+        MyPlants myPlants = myPlantsRepository.findById(myplantsId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 내 식물이 존재하지 않습니다."));
+        MyPlantsDTO myPlantsDTO = MyPlantsDTO.convertToDTO(myPlants);
+
+        return myPlantsDTO;
+    }
+
 }
-
-

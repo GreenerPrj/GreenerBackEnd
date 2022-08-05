@@ -40,7 +40,7 @@ public class BoardsService {
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
         UserEntity userEntity = userRepository.findById(request.getMembersid())
                 .orElseThrow(() -> new RuntimeException("아이디 없음"));
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getImagePath(), request.getBoardsType());
+        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
 
@@ -74,8 +74,7 @@ public class BoardsService {
                         IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
         boards.update(boardsUpdateRequest.getTitle(),
-                boardsUpdateRequest.getContent(),
-                boardsUpdateRequest.getImagePath());
+                boardsUpdateRequest.getContent());
 
         return id;
     }

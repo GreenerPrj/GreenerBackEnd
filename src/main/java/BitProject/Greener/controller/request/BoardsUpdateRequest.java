@@ -10,12 +10,10 @@ public class BoardsUpdateRequest {
 
     private String title;
     private String content;
-    private String imagePath;
 
     @Builder
-    public BoardsUpdateRequest(String imagePath,String title, String content) {
+    public BoardsUpdateRequest(String title, String content) {
         this.title = title;
         this.content = content;
-        this.imagePath= imagePath;
     }
 }
