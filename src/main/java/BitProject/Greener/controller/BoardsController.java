@@ -13,6 +13,7 @@ import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,13 +37,14 @@ public class BoardsController {
         return ResponseEntity.ok(boardsService.createBoards(request, file, request2));
     }
     @PutMapping("/{boardsId}")
-    public Long update(@PathVariable Long id, @RequestBody BoardsUpdateRequest boardsUpdateRequest) {
-        return boardsService.update(id,boardsUpdateRequest);
+    public Long update(@PathVariable Long boardsId, @RequestBody BoardsUpdateRequest boardsUpdateRequest) {
+        return boardsService.update(boardsId,boardsUpdateRequest);
     }
 
     @DeleteMapping("/{boardsId}")
-    public void delete(@PathVariable Long id){
-        boardsService.delete(id);
+    public ResponseEntity<?> delete(@PathVariable Long boardsId){
+        boardsService.delete(boardsId);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
 
