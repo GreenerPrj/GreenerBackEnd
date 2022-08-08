@@ -11,7 +11,8 @@ public class MyPlantsDTO {
 
     private Long id;
     private String name;
-    private LocalDateTime bornDate;
+//    private LocalDateTime bornDate;
+    private String bornDate;
     private String originFileName;
     private String fileName;
     private String filePath;

@@ -15,8 +15,9 @@ public class MyPlantsCreateRequest {
 
     private String name;
 
-    private LocalDateTime bornDate;
+//    private LocalDateTime bornDate;
 
+    private String bornDate;
     private String originFileName;
 
     private String fileName;

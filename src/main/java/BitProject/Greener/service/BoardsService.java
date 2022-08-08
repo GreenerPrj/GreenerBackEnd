@@ -9,6 +9,7 @@ import BitProject.Greener.domain.entity.Boards;
 
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.entity.UserEntity;
+import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.BoardFilesRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -36,11 +39,20 @@ public class BoardsService {
     private final UserRepository userRepository;
 
     private final BoardFilesRepository boardFilesRepository;
+    private final TokenProvider tokenProvider;
 
-    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
-        UserEntity userEntity = userRepository.findById(request.getMembersid())
-                .orElseThrow(() -> new RuntimeException("아이디 없음"));
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
+//    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
+//        UserEntity userEntity = userRepository.findById(request.getMembersid())
+//                .orElseThrow(() -> new RuntimeException("아이디 없음"));
+//        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
+
+    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
+        String token = tokenProvider.parseBearerToken(request2);
+        String userid = tokenProvider.tokenEncry(token);
+        UserEntity userEntity = userRepository.findByEmail(userid);
+//        .orElseThrow(() -> new RuntimeException("아이디 없음"));
+        log.info("123"+userEntity.getNickName());
+        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(),request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
 
