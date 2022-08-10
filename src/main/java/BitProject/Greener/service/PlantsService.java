@@ -2,7 +2,6 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 import BitProject.Greener.domain.entity.UserEntity;
-import BitProject.Greener.jwt.JwtAuthenticationFilter;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.domain.entity.MyPlants;
@@ -17,10 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -80,11 +78,13 @@ public class PlantsService {
 
     }
 
+
     public MyPlantsDTO getDetailWithMyPlants(Long myplantsId){
 
         MyPlants myPlants = myPlantsRepository.findById(myplantsId)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 내 식물이 존재하지 않습니다."));
         MyPlantsDTO myPlantsDTO = MyPlantsDTO.convertToDTO(myPlants);
+
 
         return myPlantsDTO;
     }

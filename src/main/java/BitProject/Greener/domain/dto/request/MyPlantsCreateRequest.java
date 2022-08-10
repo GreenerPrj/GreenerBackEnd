@@ -1,6 +1,6 @@
 package BitProject.Greener.domain.dto.request;
 
-import java.time.LocalDateTime;
+
 
 import lombok.Getter;
 
@@ -15,7 +15,9 @@ public class MyPlantsCreateRequest {
 
     private String name;
 
-    private LocalDateTime bornDate;
+//    private LocalDateTime bornDate;
+
+    private String bornDate;
 
     private String originFileName;
 

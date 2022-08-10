@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -41,6 +40,13 @@ public class BoardsService {
     private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
 
+
+//    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
+//        UserEntity userEntity = userRepository.findById(request.getMembersid())
+//                .orElseThrow(() -> new RuntimeException("아이디 없음"));
+//        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
+
+
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
         String token = tokenProvider.parseBearerToken(request2);
         String userid = tokenProvider.tokenEncry(token);
@@ -50,27 +56,29 @@ public class BoardsService {
         Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(),request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
+        log.info(file);
+        if(!file.isEmpty()){
+            String originFileName = file.getOriginalFilename();
+            String fileName = UUID.randomUUID().toString();
+            String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        String originFileName = file.getOriginalFilename();
-        String fileName = UUID.randomUUID().toString();
-        String savePath = "/var/app/files/"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            File saveFile = new File(savePath);
+            if(!saveFile.exists()){
+                saveFile.mkdir();
+            }
 
-        File saveFile = new File(savePath);
-        if(!saveFile.exists()){
-            saveFile.mkdir();
+            String filePath = savePath + "\\" + fileName;
+            try {
+                file.transferTo(new File(filePath));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
+            boardFiles.mapBoards(boards);
+
+            boardFilesRepository.save(boardFiles);
         }
-
-        String filePath = savePath + "\\" + fileName;
-        try {
-            file.transferTo(new File(filePath));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
-        boardFiles.mapBoards(boards);
-
-        boardFilesRepository.save(boardFiles);
 
         return BoardsDTO.convertToDTO(boards);
     }
@@ -115,6 +123,7 @@ public class BoardsService {
     public List<BoardsWithUserDTO> getBoardsWithUserDTO(){
 
         List<Boards> boardList = boardsRepository.findAllWithUser();
+
         log.info(boardList.stream().map(board -> {
             return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
         }).collect(Collectors.toList()));
@@ -124,4 +133,6 @@ public class BoardsService {
 
     }
 
-}
+    }
+
+

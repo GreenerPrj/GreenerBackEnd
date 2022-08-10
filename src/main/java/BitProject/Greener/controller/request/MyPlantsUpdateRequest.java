@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MyPlantsUpdateRequest {
     private String name;
-    private LocalDateTime bornDate;
+    private String bornDate;
     private String imagePath;
 
     @Builder
-    public MyPlantsUpdateRequest(String name, LocalDateTime bornDate, String imagePath) {
+    public MyPlantsUpdateRequest(String name, String bornDate, String imagePath) {
         this.name = name;
         this.bornDate = bornDate;
         this.imagePath = imagePath;

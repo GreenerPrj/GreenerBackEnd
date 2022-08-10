@@ -1,17 +1,21 @@
 package BitProject.Greener.domain.dto;
 
 
-import BitProject.Greener.common.BoardsType;
 
+import BitProject.Greener.common.BoardsType;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.entity.UserEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class BoardsWithUserDTO {
 
     private Long boardsId;
