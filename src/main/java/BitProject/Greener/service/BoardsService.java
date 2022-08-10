@@ -56,26 +56,28 @@ public class BoardsService {
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
 
-        String originFileName = file.getOriginalFilename();
-        String fileName = UUID.randomUUID().toString();
-        String savePath = "/var/app/files/"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if(!file.isEmpty()){
+            String originFileName = file.getOriginalFilename();
+            String fileName = UUID.randomUUID().toString();
+            String savePath = "/var/app/files/"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        File saveFile = new File(savePath);
-        if(!saveFile.exists()){
-            saveFile.mkdir();
+            File saveFile = new File(savePath);
+            if(!saveFile.exists()){
+                saveFile.mkdir();
+            }
+
+            String filePath = savePath + "\\" + fileName;
+            try {
+                file.transferTo(new File(filePath));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
+            boardFiles.mapBoards(boards);
+
+            boardFilesRepository.save(boardFiles);
         }
-
-        String filePath = savePath + "\\" + fileName;
-        try {
-            file.transferTo(new File(filePath));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
-        boardFiles.mapBoards(boards);
-
-        boardFilesRepository.save(boardFiles);
 
         return BoardsDTO.convertToDTO(boards);
     }

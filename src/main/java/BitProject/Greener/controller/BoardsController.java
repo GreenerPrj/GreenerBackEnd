@@ -32,7 +32,7 @@ public class BoardsController {
 
     @PostMapping()
     public ResponseEntity<BoardsDTO> create(
-            @RequestPart MultipartFile file,
+            @RequestPart(required = false) MultipartFile file,
             @RequestBody BoardsCreateRequest request, HttpServletRequest request2) {
         return ResponseEntity.ok(boardsService.createBoards(request, file, request2));
     }
