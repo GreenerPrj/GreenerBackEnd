@@ -8,6 +8,8 @@ public class BoardsDTO {
     private Long id;
     private String title;
     private String content;
+    private String category;
+
 
     public static BoardsDTO convertToDTO(Boards boards) {
         BoardsDTO boardsDTO = new BoardsDTO();

@@ -8,9 +8,11 @@ import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
 
 import BitProject.Greener.domain.dto.BoardsDTO;
+import BitProject.Greener.domain.entity.BoardsCategory;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.BoardFilesRepository;
+import BitProject.Greener.repository.BoardsCategoryRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
 import java.io.File;
@@ -39,6 +41,7 @@ public class BoardsService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
+    private final BoardsCategoryRepository boardsCategoryRepository;
 
 
 //    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
@@ -47,13 +50,13 @@ public class BoardsService {
 //        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
 
 
-    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
+    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2,BoardsDTO boardsDTO) {
         String token = tokenProvider.parseBearerToken(request2);
         String userid = tokenProvider.tokenEncry(token);
         UserEntity userEntity = userRepository.findByEmail(userid);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
         log.info("123"+userEntity.getNickName());
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(),request.getBoardsType());
+        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), BoardsCategoryRepository.findByName(boardsDTO.getCategory()));
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
         log.info(file);
