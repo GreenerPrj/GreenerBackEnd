@@ -55,7 +55,7 @@ public class BoardsService {
         Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(),request.getBoardsType());
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
-
+        log.info(file);
         if(!file.isEmpty()){
             String originFileName = file.getOriginalFilename();
             String fileName = UUID.randomUUID().toString();

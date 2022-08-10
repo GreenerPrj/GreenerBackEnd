@@ -13,11 +13,11 @@ spring:
     username: admin
     password: 12345678
 
-    servlet:
-      multipart:
-        maxFileSize: 50MB
-        maxRequestSize: 50MB
-        location: /var/app/files
+  servlet:
+    multipart:
+      maxFileSize: 50MB
+      maxRequestSize: 50MB
+      location: /Users/hjson/Downloads
 
 
 
