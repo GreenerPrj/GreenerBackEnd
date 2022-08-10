@@ -59,7 +59,7 @@ public class BoardsService {
         if(!file.isEmpty()){
             String originFileName = file.getOriginalFilename();
             String fileName = UUID.randomUUID().toString();
-            String savePath = "/var/app/files/"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             File saveFile = new File(savePath);
             if(!saveFile.exists()){

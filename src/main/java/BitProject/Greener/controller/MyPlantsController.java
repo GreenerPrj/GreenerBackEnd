@@ -32,8 +32,8 @@ public class MyPlantsController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public void create(@Valid @ModelAttribute BoardsDTO boardsDTO){
-        plantsService.create(getMyPlantsDTO());
+    public ResponseEntity<MyPlantsDTO> create(@RequestBody MyPlantsCreateRequest request, HttpServletRequest request2){
+        return ResponseEntity.ok(plantsService.createMyPlants(request, request2));
     }
     @PutMapping()
     public Long update(@PathVariable Long id, @RequestBody MyPlantsUpdateRequest myPlantsUpdateRequest){

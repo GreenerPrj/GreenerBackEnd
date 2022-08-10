@@ -35,7 +35,7 @@ public class TokenProvider {
     }
 
     public  String accessToken(UserEntity userEntity){  //access token 발급
-        Date expiryDate = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
+        Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         Claims claims = Jwts.claims().setSubject(userEntity.getEmail());
 
         return Jwts.builder()
