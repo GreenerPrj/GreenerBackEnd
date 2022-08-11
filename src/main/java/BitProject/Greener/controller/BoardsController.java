@@ -64,6 +64,6 @@ public class BoardsController {
 
     @GetMapping("/boardscategory/")
     public ResponseEntity<List<BoardsCategoryDTO>> getBoardsCategoryDTO(){
-        return ResponseEntity.ok(boardsService.getBoards)
+        return ResponseEntity.ok(boardsService.getBoards);
     }
 }

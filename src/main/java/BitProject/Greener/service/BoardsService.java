@@ -16,8 +16,10 @@ import BitProject.Greener.repository.BoardsCategoryRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
 import java.io.File;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -57,7 +59,7 @@ public class BoardsService {
         UserEntity userEntity = userRepository.findByEmail(userid);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
         log.info("123"+userEntity.getNickName());
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName());
+        Boards boards = Boards.of(request.getTitle() ,request.getContent(), userEntity.getNickName());
         boards.mappingCategory(boardsCategoryRepository.findByName(boardsDTO.getCategory()));
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
@@ -72,9 +74,11 @@ public class BoardsService {
                 saveFile.mkdir();
             }
 
+            String filePath2 = Paths.get(savePath, fileName).toString();
+
             String filePath = savePath + "\\" + fileName;
             try {
-                file.transferTo(new File(filePath));
+                file.transferTo(Paths.get(filePath2));
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -130,7 +134,7 @@ public class BoardsService {
     public List<BoardsWithUserDTO> getBoardsWithUserDTO(){
 
         List<Boards> boardList = boardsRepository.findAllWithUser();
-
+        
         log.info(boardList.stream().map(board -> {
             return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
         }).collect(Collectors.toList()));
