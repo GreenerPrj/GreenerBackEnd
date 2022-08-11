@@ -20,6 +20,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -49,13 +51,17 @@ public class BoardsService {
 
 
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
-        String userid = null;
+        String username = null;
         try {
             String token = tokenProvider.parseBearerToken(request2);
-            userid = tokenProvider.tokenEncry(token);
-        } finally {
+            username = tokenProvider.tokenEncry(token);
+        }
+        catch (ExpiredJwtException e){
+            username = e.getClaims().getSubject();
+        }
+        finally {
 
-            UserEntity userEntity = userRepository.findByEmail(userid);
+            UserEntity userEntity = userRepository.findByEmail(username);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
 
             Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), request.getBoardsType());

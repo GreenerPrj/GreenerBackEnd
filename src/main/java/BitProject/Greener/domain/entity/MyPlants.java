@@ -16,7 +16,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class MyPlants extends BaseEntity {
+public class MyPlants{
     @GeneratedValue(strategy = IDENTITY)
     @Id
     private Long id;

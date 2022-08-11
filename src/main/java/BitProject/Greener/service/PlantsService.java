@@ -47,11 +47,12 @@ public class PlantsService {
         try {
             String token = tokenProvider.parseBearerToken(request2);
             username = tokenProvider.tokenEncry(token);
-        } finally {
+        }
+        catch (ExpiredJwtException e){
+            username = e.getClaims().getSubject();
+        }
+        finally {
 
-//            String token = tokenProvider.parseBearerToken(request2);
-//            String username = tokenProvider.tokenEncry(token);
-            //        request2.getHeader("accessToken").getClaims().getSubject();
             UserEntity userEntity = userRepository.findByEmail(username);
             Plants plants = plantsRepository.findById(request.getPlantsId()).orElseThrow(() -> new RuntimeException("식물 없음"));
 
@@ -78,6 +79,7 @@ public class PlantsService {
             // 외래키 등록(연관관계 매핑)
             myPlants.mapMembersAndPlants(userEntity, plants);
             // 저장
+            log.info(userEntity.getId());
             myPlantsRepository.save(myPlants);
             // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
             return MyPlantsDTO.convertToDTO(myPlants);

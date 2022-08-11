@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class MyPlantsDTO extends BaseEntity {
+public class MyPlantsDTO{
 
     private Long id;
     private String name;
@@ -20,7 +20,7 @@ public class MyPlantsDTO extends BaseEntity {
         MyPlantsDTO myPlantsDTO = new MyPlantsDTO();
         myPlantsDTO.id = myPlants.getId();
         myPlantsDTO.name = myPlants.getName();
-        myPlantsDTO.bornDate = myPlants.createDateTime();
+        myPlantsDTO.bornDate = myPlants.getBornDate();
         myPlantsDTO.originFileName = myPlants.getOriginFileName();
         myPlantsDTO.fileName = myPlants.getFileName();
         myPlantsDTO.filePath = myPlants.getFilePath();
