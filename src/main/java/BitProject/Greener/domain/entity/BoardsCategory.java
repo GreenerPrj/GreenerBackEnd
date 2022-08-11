@@ -1,5 +1,6 @@
 package BitProject.Greener.domain.entity;
 
+import BitProject.Greener.common.BoardsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,8 @@ public class BoardsCategory {
     private Long id;
 
     @Column(unique = true)
-    private String name;
+    @Enumerated(value = EnumType.STRING)
+    private BoardsType name;
 
     @Column(unique = true)
     private String value;

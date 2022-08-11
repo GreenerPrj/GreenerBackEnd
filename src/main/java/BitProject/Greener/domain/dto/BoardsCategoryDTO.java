@@ -1,5 +1,6 @@
 package BitProject.Greener.domain.dto;
 
+import BitProject.Greener.common.BoardsType;
 import BitProject.Greener.domain.entity.BoardsCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardsCategoryDTO {
     private Long id;
-    private String name;
+    private BoardsType name;
     private String value;
 
     public static BoardsCategoryDTO convertToBoardsCategoryDTO(BoardsCategory boardsCategory){

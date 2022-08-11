@@ -1,6 +1,7 @@
 package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
+import BitProject.Greener.domain.dto.BoardsCategoryDTO;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
@@ -23,10 +24,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +47,6 @@ public class BoardsService {
     private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
-    private final BoardsDTO boardsDTO;
 
 
 //    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
@@ -141,6 +145,16 @@ public class BoardsService {
 
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardsCategoryDTO> boardsCategoryList() {
+        List<BoardsCategory> boardsCategoryList = boardsCategoryRepository.findAll();
+
+        Stream<BoardsCategory> stream = boardsCategoryList.stream();
+
+        return stream.map(BoardsCategoryDTO::convertToBoardsCategoryDTO).collect(Collectors.toList());
     }
+
+
+}
 
 
