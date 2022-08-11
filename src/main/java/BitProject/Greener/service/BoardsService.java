@@ -1,14 +1,11 @@
 package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
-import BitProject.Greener.domain.dto.BoardsCategoryDTO;
-import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
-import BitProject.Greener.domain.dto.BoardsWithUserDTO;
+import BitProject.Greener.domain.dto.*;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
 
-import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.entity.BoardsCategory;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
@@ -154,6 +151,12 @@ public class BoardsService {
         return stream.map(BoardsCategoryDTO::convertToBoardsCategoryDTO).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public Page<BoardsDTO> getBoardsListPaging(SearchDTO searchDTO, Pageable pageable) {
+        Page<Boards> boards = boardsRepository.boardsListPagingQueryDSL(searchDTO, pageable);
+
+        return boards.map(BoardsDTO::convertToDTO);
+    }
 
 }
 

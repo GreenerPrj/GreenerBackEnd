@@ -2,10 +2,8 @@ package BitProject.Greener.controller;
 
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
-import BitProject.Greener.domain.dto.BoardsCategoryDTO;
-import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
-import BitProject.Greener.domain.dto.BoardsWithUserDTO;
-import BitProject.Greener.domain.dto.BoardsDTO;
+import BitProject.Greener.controller.request.PageRequestCustom;
+import BitProject.Greener.domain.dto.*;
 import BitProject.Greener.service.BoardsService;
 
 
@@ -13,6 +11,7 @@ import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -57,6 +56,13 @@ public class BoardsController {
     @GetMapping()
     public ResponseEntity<List<BoardsWithUserDTO>> getBoardsWithUserDTO(){
         return ResponseEntity.ok(boardsService.getBoardsWithUserDTO());
+    }
+
+    @GetMapping()
+    public ResponseEntity<Page<BoardsDTO>> getBoardsList(SearchDTO searchDTO, PageRequestCustom pageRequestCustom){
+        Page<BoardsDTO> boardsListPaging = boardsService.getBoardsListPaging(searchDTO, pageRequestCustom.of());
+
+        return ResponseEntity.ok(boardsListPaging);
     }
 
 
