@@ -1,8 +1,11 @@
 package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
+
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
+
+import BitProject.Greener.repository.TokenRespository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.domain.entity.MyPlants;
 import BitProject.Greener.domain.entity.Plants;
@@ -10,14 +13,22 @@ import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.repository.MyPlantsRepository;
 import BitProject.Greener.repository.PlantsRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -31,23 +42,50 @@ public class PlantsService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
-    public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, HttpServletRequest request2) {
-        String token = tokenProvider.parseBearerToken(request2);
-        String username = tokenProvider.tokenEncry(token);
-        UserEntity userEntity = userRepository.findByEmail(username);
-        log.info(request2.getHeader("plantsId"));
+    public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
+        String username = null;
+        try {
+            String token = tokenProvider.parseBearerToken(request2);
+            username = tokenProvider.tokenEncry(token);
+        } finally {
 
-        Plants plants = plantsRepository.findById(request.getPlantsId()).orElseThrow(() -> new RuntimeException("식물 없음"));
-        // MyPlants생성 -> static 생성자 사용(빌더패턴 사용해도 무방)
-        MyPlants myPlants = MyPlants.of(request.getName(), request.getBornDate(), request.getOriginFileName(),request.getFileName(),request.getFilePath());
-        // 외래키 등록(연관관계 매핑)
-        myPlants.mapMembersAndPlants(userEntity, plants);
-        // 저장
-        myPlantsRepository.save(myPlants);
-        // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
-        return MyPlantsDTO.convertToDTO(myPlants);
+//            String token = tokenProvider.parseBearerToken(request2);
+//            String username = tokenProvider.tokenEncry(token);
+            //        request2.getHeader("accessToken").getClaims().getSubject();
+            UserEntity userEntity = userRepository.findByEmail(username);
+            Plants plants = plantsRepository.findById(request.getPlantsId()).orElseThrow(() -> new RuntimeException("식물 없음"));
+
+            String originFileName = file.getOriginalFilename();
+            String fileName = UUID.randomUUID().toString();
+            String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            File saveFile = new File(savePath);
+            if (!saveFile.exists()) {
+                saveFile.mkdir();
+            }
+
+            String filePath = savePath + "\\" + fileName;
+            String filePath2 = Paths.get(savePath, fileName).toString();
+
+
+            try {
+                file.transferTo(Paths.get(filePath2));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // MyPlants생성 -> static 생성자 사용(빌더패턴 사용해도 무방)
+            MyPlants myPlants = MyPlants.of(request.getName(), LocalDateTime.now(), originFileName, fileName, filePath2, filePath);
+            // 외래키 등록(연관관계 매핑)
+            myPlants.mapMembersAndPlants(userEntity, plants);
+            // 저장
+            myPlantsRepository.save(myPlants);
+            // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
+            return MyPlantsDTO.convertToDTO(myPlants);
+
+        }
 
     }
+
 
     public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest){
         MyPlants myPlants = myPlantsRepository.findById(id)

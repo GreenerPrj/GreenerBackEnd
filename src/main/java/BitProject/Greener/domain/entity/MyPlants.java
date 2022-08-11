@@ -33,7 +33,7 @@ public class MyPlants extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private String bornDate;
+    private LocalDateTime bornDate;
 
     @Column(nullable = false)
     private String imagePath;
@@ -51,18 +51,18 @@ public class MyPlants extends BaseEntity {
 
 
 
-    public static MyPlants of(String name, String bornDate,String originFileName, String fileName, String filePath){
-
+    public static MyPlants of(String name, LocalDateTime bornDate,String originFileName, String fileName, String filePath, String imagePath){
         MyPlants instance = new MyPlants();
         instance.name = name;
         instance.bornDate = bornDate;
         instance.originFileName = originFileName;
         instance.fileName = fileName;
         instance.filePath = filePath;
+        instance.imagePath = imagePath;
         return instance;
     }
 
-    public void update(String name, String bornDate, String imagePath) {
+    public void update(String name, LocalDateTime bornDate, String imagePath) {
         this.name = name;
         this.bornDate = bornDate;
         this.imagePath = imagePath;

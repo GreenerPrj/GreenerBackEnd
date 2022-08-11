@@ -14,6 +14,7 @@ import BitProject.Greener.repository.BoardFilesRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
 import java.io.File;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -48,39 +49,41 @@ public class BoardsService {
 
 
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
-        String token = tokenProvider.parseBearerToken(request2);
-        String userid = tokenProvider.tokenEncry(token);
-        UserEntity userEntity = userRepository.findByEmail(userid);
+        String userid = null;
+        try {
+            String token = tokenProvider.parseBearerToken(request2);
+            userid = tokenProvider.tokenEncry(token);
+        } finally {
+
+            UserEntity userEntity = userRepository.findByEmail(userid);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
-        log.info("123"+userEntity.getNickName());
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(),request.getBoardsType());
-        boards.mapMembers(userEntity);
-        boardsRepository.save(boards);
-        log.info(file);
-        if(!file.isEmpty()){
-            String originFileName = file.getOriginalFilename();
-            String fileName = UUID.randomUUID().toString();
-            String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-            File saveFile = new File(savePath);
-            if(!saveFile.exists()){
-                saveFile.mkdir();
+            Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), request.getBoardsType());
+            boards.mapMembers(userEntity);
+            boardsRepository.save(boards);
+
+            if (!file.isEmpty()) {
+                String originFileName = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString();
+                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                File saveFile = new File(savePath);
+                if (!saveFile.exists()) {
+                    saveFile.mkdir();
+                }
+                String filePath = savePath + "\\" + fileName;
+                String filePath2 = Paths.get(savePath, fileName).toString();
+                try {
+                    file.transferTo(Paths.get(filePath2));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
+                boardFiles.mapBoards(boards);
+                boardFilesRepository.save(boardFiles);
             }
-
-            String filePath = savePath + "\\" + fileName;
-            try {
-                file.transferTo(new File(filePath));
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
-            boardFiles.mapBoards(boards);
-
-            boardFilesRepository.save(boardFiles);
+            return BoardsDTO.convertToDTO(boards);
         }
-
-        return BoardsDTO.convertToDTO(boards);
     }
 
     public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest) {

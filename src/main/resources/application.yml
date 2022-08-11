@@ -17,7 +17,7 @@ spring:
     multipart:
       maxFileSize: 50MB
       maxRequestSize: 50MB
-      location: /Users/bohyenkang/Downloads
+      location:
 
 
 
