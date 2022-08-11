@@ -42,6 +42,7 @@ public class BoardsService {
     private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
+    private final BoardsDTO boardsDTO;
 
 
 //    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
@@ -50,13 +51,14 @@ public class BoardsService {
 //        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
 
 
-    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2,BoardsDTO boardsDTO) {
+    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
         String token = tokenProvider.parseBearerToken(request2);
         String userid = tokenProvider.tokenEncry(token);
         UserEntity userEntity = userRepository.findByEmail(userid);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
         log.info("123"+userEntity.getNickName());
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), BoardsCategoryRepository.findByName(boardsDTO.getCategory()));
+        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName());
+        boards.mappingCategory(boardsCategoryRepository.findByName(boardsDTO.getCategory()));
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
         log.info(file);
@@ -82,6 +84,8 @@ public class BoardsService {
 
             boardFilesRepository.save(boardFiles);
         }
+
+
 
         return BoardsDTO.convertToDTO(boards);
     }

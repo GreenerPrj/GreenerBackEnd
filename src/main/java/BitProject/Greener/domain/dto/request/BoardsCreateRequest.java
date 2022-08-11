@@ -14,5 +14,7 @@ public class BoardsCreateRequest {
 
     private String nickName;
 
+    private Long categoryid;
+
     private String category;
 }

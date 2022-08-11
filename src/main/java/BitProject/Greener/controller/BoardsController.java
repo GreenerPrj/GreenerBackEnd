@@ -2,6 +2,7 @@ package BitProject.Greener.controller;
 
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
+import BitProject.Greener.domain.dto.BoardsCategoryDTO;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.BoardsDTO;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,4 +62,8 @@ public class BoardsController {
         return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
     }
 
+    @GetMapping("/boardscategory/")
+    public ResponseEntity<List<BoardsCategoryDTO>> getBoardsCategoryDTO(){
+        return ResponseEntity.ok(boardsService.getBoards)
+    }
 }
