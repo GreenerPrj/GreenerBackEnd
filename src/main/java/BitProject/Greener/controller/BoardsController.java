@@ -54,18 +54,9 @@ public class BoardsController {
 
 
     @GetMapping()
-    public ResponseEntity<List<BoardsWithUserDTO>> getBoardsWithUserDTO(){
-        return ResponseEntity.ok(boardsService.getBoardsWithUserDTO());
+    public ResponseEntity<Page<BoardsWithUserDTO>> getBoardsWithUserDTO(Pageable pageable){
+        return ResponseEntity.ok(boardsService.getBoardsWithUserDTO(pageable));
     }
-
-    @GetMapping()
-    public ResponseEntity<Page<BoardsDTO>> getBoardsList(SearchDTO searchDTO, PageRequestCustom pageRequestCustom){
-        Page<BoardsDTO> boardsListPaging = boardsService.getBoardsListPaging(searchDTO, pageRequestCustom.of());
-
-        return ResponseEntity.ok(boardsListPaging);
-    }
-
-
 
     @GetMapping("/{boardsId}/detail")
     public ResponseEntity<BoardsWithBoardFilesDTO> detail(

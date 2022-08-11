@@ -32,7 +32,7 @@ public class Boards extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "boards_category_id")
+    @JoinColumn(name = "boards_category_id", referencedColumnName = "id")
     private BoardsCategory category;
 
     private void mappingCategory(BoardsCategory boardsCategory){

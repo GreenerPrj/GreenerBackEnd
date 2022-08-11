@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,16 +130,19 @@ public class BoardsService {
         return boardsWithBoardFilesDTO;
     }
 
-    public List<BoardsWithUserDTO> getBoardsWithUserDTO(){
+    public Page<BoardsWithUserDTO> getBoardsWithUserDTO(Pageable pageable){
 
-        List<Boards> boardList = boardsRepository.findAllWithUser();
 
-        log.info(boardList.stream().map(board -> {
-            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
-        }).collect(Collectors.toList()));
-        return boardList.stream().map(board -> {
-            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
+        List<Boards> boardList = boardsRepository.findAllWithPagination(pageable);
+
+//        log.info(boardList.stream().map(board -> {
+//            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
+//        }).collect(Collectors.toList()));
+        List<BoardsWithUserDTO> boards = boardList.stream().map(board -> {
+            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity(),
+                board.getCategory());
         }).collect(Collectors.toList());
+        return new PageImpl<>(boards, pageable, boardList.size());
 
     }
 
@@ -149,13 +153,6 @@ public class BoardsService {
         Stream<BoardsCategory> stream = boardsCategoryList.stream();
 
         return stream.map(BoardsCategoryDTO::convertToBoardsCategoryDTO).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public Page<BoardsDTO> getBoardsListPaging(SearchDTO searchDTO, Pageable pageable) {
-        Page<Boards> boards = boardsRepository.boardsListPagingQueryDSL(searchDTO, pageable);
-
-        return boards.map(BoardsDTO::convertToDTO);
     }
 
 }
