@@ -57,8 +57,9 @@ public class BoardsService {
         UserEntity userEntity = userRepository.findByEmail(userid);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
         log.info("123"+userEntity.getNickName());
-        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName());
-        boards.mappingCategory(boardsCategoryRepository.findByName(boardsDTO.getCategory()));
+        BoardsCategory boardsCategory = boardsCategoryRepository.findById(request.getCategoryid())
+            .orElseThrow(() -> new RuntimeException("카테고리가 없습니다."));
+        Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), boardsCategory);
         boards.mapMembers(userEntity);
         boardsRepository.save(boards);
         log.info(file);

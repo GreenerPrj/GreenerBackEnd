@@ -35,19 +35,17 @@ public class Boards extends BaseEntity {
     @JoinColumn(name = "boards_category_id")
     private BoardsCategory category;
 
-    public void mappingCategory(BoardsCategory boardsCategory){
+    private void mappingCategory(BoardsCategory boardsCategory){
         this.category = boardsCategory;
         boardsCategory.mappingPost(this);
     }
-
-
 
     public static Boards of(String title,String content, String nickName, BoardsCategory category){
         Boards instance = new Boards();
         instance.title = title;
         instance.content = content;
         instance.nickName = nickName;
-        instance.category = category;
+        instance.mappingCategory(category);
         return instance;
     }
 

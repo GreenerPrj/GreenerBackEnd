@@ -16,5 +16,4 @@ public class BoardsCreateRequest {
 
     private Long categoryid;
 
-    private String category;
 }
