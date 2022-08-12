@@ -14,11 +14,14 @@ import BitProject.Greener.repository.BoardsCategoryRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
 import java.io.File;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -54,10 +57,19 @@ public class BoardsService {
 
 
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
-        String token = tokenProvider.parseBearerToken(request2);
-        String userid = tokenProvider.tokenEncry(token);
-        UserEntity userEntity = userRepository.findByEmail(userid);
+        String username = null;
+        try {
+            String token = tokenProvider.parseBearerToken(request2);
+            username = tokenProvider.tokenEncry(token);
+        }
+        catch (ExpiredJwtException e){
+            username = e.getClaims().getSubject();
+        }
+        finally {
+
+            UserEntity userEntity = userRepository.findByEmail(username);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
+<<<<<<< HEAD
         log.info("123"+userEntity.getNickName());
         BoardsCategory boardsCategory = boardsCategoryRepository.findById(request.getCategoryid())
             .orElseThrow(() -> new RuntimeException("카테고리가 없습니다."));
@@ -74,23 +86,42 @@ public class BoardsService {
             if(!saveFile.exists()){
                 saveFile.mkdir();
             }
+=======
+>>>>>>> master
 
-            String filePath = savePath + "\\" + fileName;
-            try {
-                file.transferTo(new File(filePath));
-            }catch (Exception e){
-                e.printStackTrace();
+            Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), request.getBoardsType());
+            boards.mapMembers(userEntity);
+            boardsRepository.save(boards);
+
+            if (!file.isEmpty()) {
+                String originFileName = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString();
+                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                File saveFile = new File(savePath);
+                if (!saveFile.exists()) {
+                    saveFile.mkdir();
+                }
+                String filePath = savePath + "\\" + fileName;
+                String filePath2 = Paths.get(savePath, fileName).toString();
+                try {
+                    file.transferTo(Paths.get(filePath2));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
+                boardFiles.mapBoards(boards);
+                boardFilesRepository.save(boardFiles);
             }
-
-            BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
-            boardFiles.mapBoards(boards);
-
-            boardFilesRepository.save(boardFiles);
+            return BoardsDTO.convertToDTO(boards);
         }
+<<<<<<< HEAD
 
 
 
         return BoardsDTO.convertToDTO(boards);
+=======
+>>>>>>> master
     }
 
     public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest) {
