@@ -6,21 +6,20 @@ import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
-
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.BoardFilesRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
-import java.io.File;
+import java.io.*;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,11 +55,9 @@ public class BoardsService {
         try {
             String token = tokenProvider.parseBearerToken(request2);
             username = tokenProvider.tokenEncry(token);
-        }
-        catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             username = e.getClaims().getSubject();
-        }
-        finally {
+        } finally {
 
             UserEntity userEntity = userRepository.findByEmail(username);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
@@ -68,7 +66,7 @@ public class BoardsService {
             boards.mapMembers(userEntity);
             boardsRepository.save(boards);
 
-            if (!file.isEmpty()) {
+            if (file != null) {
                 String originFileName = file.getOriginalFilename();
                 String fileName = UUID.randomUUID().toString();
                 String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -77,7 +75,8 @@ public class BoardsService {
                 if (!saveFile.exists()) {
                     saveFile.mkdir();
                 }
-                String filePath = savePath + "\\" + fileName;
+                String filePath = savePath + "/" + fileName + ".png";
+                fileName = fileName + ".png";
                 String filePath2 = Paths.get(savePath, fileName).toString();
                 try {
                     file.transferTo(Paths.get(filePath2));
@@ -103,18 +102,19 @@ public class BoardsService {
         return id;
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
         boardsRepository.delete(boards);
     }
 
-    public List<Boards> reading(){
+    public List<Boards> reading() {
         return boardsRepository.findAll();
     }
 
-    public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId){
+    public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId) throws IOException {
+
         // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
@@ -123,25 +123,32 @@ public class BoardsService {
         // 우선 board는 필수니까 DTO로 변환해주고
         BoardsWithBoardFilesDTO boardsWithBoardFilesDTO = BoardsWithBoardFilesDTO.convertToBoardDTO(
                 boards);
+
+        String abs_path = "http://localhost:8080/images/";
+        try {
+            boardsWithBoardFilesDTO.setImg(abs_path + boardFiles.get().getFilePath());
+        } catch (Exception e) {
+
+        }
+
+
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
         // 리턴해주면 끝
         return boardsWithBoardFilesDTO;
     }
 
-    public List<BoardsWithUserDTO> getBoardsWithUserDTO(){
+    public List<BoardsWithUserDTO> getBoardsWithUserDTO() {
 
         List<Boards> boardList = boardsRepository.findAllWithUser();
+        Collections.reverse(boardList);
 
-        log.info(boardList.stream().map(board -> {
-            return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
-        }).collect(Collectors.toList()));
         return boardList.stream().map(board -> {
             return BoardsWithUserDTO.convertToDto(board, board.getUserEntity());
         }).collect(Collectors.toList());
 
     }
 
-    }
+}
 
 

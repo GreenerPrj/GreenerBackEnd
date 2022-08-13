@@ -5,19 +5,21 @@ import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class BoardsWithBoardFilesDTO {
     private Long boardsId;
     private String title;
     private String content;
-
     private LocalDateTime createDate;
-
     private Long boardFilesId;
     private String fileName;
     private String filePath;
     private String nickName;
+
+    private String img;
 
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();

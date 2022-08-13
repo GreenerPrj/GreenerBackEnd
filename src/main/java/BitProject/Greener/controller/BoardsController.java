@@ -6,20 +6,17 @@ import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.service.BoardsService;
-
-
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.*;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
+
 
 @RequestMapping("/api/v1/boards")
 @RequiredArgsConstructor
@@ -47,17 +44,13 @@ public class BoardsController {
     }
 
 
-
     @GetMapping()
     public ResponseEntity<List<BoardsWithUserDTO>> getBoardsWithUserDTO(){
         return ResponseEntity.ok(boardsService.getBoardsWithUserDTO());
     }
 
     @GetMapping("/{boardsId}/detail")
-    public ResponseEntity<BoardsWithBoardFilesDTO> detail(
-            @PathVariable Long boardsId
-    ){
+    public ResponseEntity<BoardsWithBoardFilesDTO> detail(@PathVariable Long boardsId) throws IOException {
         return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
     }
-
 }
