@@ -12,6 +12,7 @@ import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.BoardFilesRepository;
 import BitProject.Greener.repository.UserRepository;
 import BitProject.Greener.repository.BoardsRepository;
+
 import java.io.*;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -69,7 +71,7 @@ public class BoardsService {
             if (file != null) {
                 String originFileName = file.getOriginalFilename();
                 String fileName = UUID.randomUUID().toString();
-                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String savePath = "src/main/resources/static/images/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
                 File saveFile = new File(savePath);
                 if (!saveFile.exists()) {
@@ -114,7 +116,7 @@ public class BoardsService {
     }
 
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId) throws IOException {
-
+//123123
         // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
