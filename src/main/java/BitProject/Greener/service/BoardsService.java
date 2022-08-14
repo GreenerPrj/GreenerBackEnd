@@ -71,17 +71,18 @@ public class BoardsService {
             if (file != null) {
                 String originFileName = file.getOriginalFilename();
                 String fileName = UUID.randomUUID().toString();
-                String savePath = "src/main/resources/static/images/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String absPath = "src/main/resources/static/images/";
+                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String filePath = savePath + "/" + fileName + ".png";
+                String filePath2 = Paths.get(absPath+savePath, fileName+".png").toString();
+                File saveFile = new File(absPath+savePath);
 
-                File saveFile = new File(savePath);
-                if (!saveFile.exists()) {
+                if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
                     saveFile.mkdir();
                 }
-                String filePath = savePath + "/" + fileName + ".png";
-                fileName = fileName + ".png";
-                String filePath2 = Paths.get(savePath, fileName).toString();
+
                 try {
-                    file.transferTo(Paths.get(filePath2));
+                    file.transferTo(Paths.get(filePath2)); // 사진저장
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -116,27 +117,23 @@ public class BoardsService {
     }
 
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId) throws IOException {
-//123123
         // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
         // 우선 board는 필수니까 DTO로 변환해주고
-        BoardsWithBoardFilesDTO boardsWithBoardFilesDTO = BoardsWithBoardFilesDTO.convertToBoardDTO(
-                boards);
+        BoardsWithBoardFilesDTO boardsWithBoardFilesDTO = BoardsWithBoardFilesDTO.convertToBoardDTO(boards);
 
-        String abs_path = "http://localhost:8080/images/";
+        String addressPath = "http://localhost:8080/images/";
         try {
-            boardsWithBoardFilesDTO.setImg(abs_path + boardFiles.get().getFilePath());
-        } catch (Exception e) {
-
-        }
-
+            boardsWithBoardFilesDTO.setImg(addressPath + boardFiles.get().getFilePath());
+        } catch (Exception e) {}
 
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
         // 리턴해주면 끝
+        log.info(boardsWithBoardFilesDTO.getImg());
         return boardsWithBoardFilesDTO;
     }
 
