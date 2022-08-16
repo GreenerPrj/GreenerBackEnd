@@ -18,9 +18,9 @@ public class BoardsWithBoardFilesDTO {
     private String fileName;
     private String filePath;
     private String nickName;
-
     private String img;
     private byte[] img2;
+    private Long userId;
 
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();

@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 import BitProject.Greener.common.BoardsType;
 import lombok.Getter;
-import org.springframework.data.util.Lazy;
+
 
 @Entity
 @Getter

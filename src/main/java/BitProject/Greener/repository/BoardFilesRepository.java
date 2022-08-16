@@ -9,5 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardFilesRepository extends JpaRepository<BoardFiles, Long> {
     Optional<BoardFiles> findByBoards(Boards boards);
-    BoardFiles findByBoardsId(Long id);
+
+    BoardFiles findByBoardsId(Long id );
+
+
+
 }

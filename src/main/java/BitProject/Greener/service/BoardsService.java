@@ -37,7 +37,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class BoardsService {
@@ -53,7 +52,7 @@ public class BoardsService {
 //                .orElseThrow(() -> new RuntimeException("아이디 없음"));
 //        Boards boards = Boards.of(request.getTitle(), request.getContent(), request.getNickName(),request.getBoardsType());
 
-
+    @Transactional
     public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
         String username = null;
         try {
@@ -64,7 +63,7 @@ public class BoardsService {
         } finally {
 
             UserEntity userEntity = userRepository.findByEmail(username);
-//        .orElseThrow(() -> new RuntimeException("아이디 없음"));
+
 
             Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), request.getBoardsType());
             boards.mapMembers(userEntity);
@@ -107,51 +106,60 @@ public class BoardsService {
         return id;
     }
 
+
     public void delete(Long id) {
-        BoardFiles boards2 = boardFilesRepository.findByBoardsId(id);
-        boardFilesRepository.delete(boards2);
-        Boards boards = boardsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
-        boardsRepository.delete(boards);
+        Boards boards = boardsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+        log.info("111111111");
         //파일 경로 지정
         String path = "src/main/resources/static/images/";
-        String fullname = path + boards2.getFilePath();
-
-        //현재 게시판에 존재하는 파일객체를 만듬
-        File file = new File(fullname);
-
-        if(file.exists()) { // 파일이 존재하면
-            file.delete(); // 파일 삭제
+        try {
+            log.info("2222222222");
+            BoardFiles boardFiles = boardFilesRepository.findByBoardsId(id);
+            boardFilesRepository.delete(boardFiles);
+            String fullname = path + boardFiles.getFilePath();
+            //현재 게시판에 존재하는 파일객체를 만듬
+            File file = new File(fullname);
+            if (file.exists()) { // 파일이 존재하면
+                file.delete(); // 파일 삭제
+            }
         }
+        catch (Exception e){
+            log.info("123123123");
+        }
+        log.info("3333333");
+        boardsRepository.delete(boards);
     }
-
-    public List<Boards> reading() {
-        return boardsRepository.findAll();
-    }
-
+    @Transactional
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId) throws IOException {
-        // 게시글 찾기
+            // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
         // 우선 board는 필수니까 DTO로 변환해주고
         BoardsWithBoardFilesDTO boardsWithBoardFilesDTO = BoardsWithBoardFilesDTO.convertToBoardDTO(boards);
 
         String addressPath = "./src/main/resources/static/images/";
-        InputStream imageStream = new FileInputStream(addressPath + boardFiles.get().getFilePath());
-        byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+
         try {
-            boardsWithBoardFilesDTO.setImg("http://localhost:8080/api/v1/boards/"+boardsId+"/detail/images");
+            InputStream imageStream = new FileInputStream(addressPath + boardFiles.get().getFilePath());
+            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+            boardsWithBoardFilesDTO.setImg("http://localhost:8080/api/v1/boards/" + boardsId + "/detail/images");
             boardsWithBoardFilesDTO.setImg2(imageByteArray);
-        } catch (Exception e) {}
+            boardsWithBoardFilesDTO.setUserId(boards.getUserEntity().getId());
+        } catch (Exception e) {
+            boardsWithBoardFilesDTO.setUserId(boards.getUserEntity().getId());
+        }
 
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
         // 리턴해주면 끝
-
         return boardsWithBoardFilesDTO;
-    }
 
+    }
+    @Transactional
     public List<BoardsWithUserDTO> getBoardsWithUserDTO() {
 
         List<Boards> boardList = boardsRepository.findAllWithUser();

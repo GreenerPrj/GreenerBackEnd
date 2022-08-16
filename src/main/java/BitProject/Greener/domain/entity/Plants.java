@@ -33,7 +33,4 @@ public class Plants extends BaseEntity {
     private Integer temperature;
 
 
-
-
-
 }
