@@ -61,10 +61,7 @@ public class BoardsService {
         } catch (ExpiredJwtException e) {
             username = e.getClaims().getSubject();
         } finally {
-
             UserEntity userEntity = userRepository.findByEmail(username);
-
-
             Boards boards = Boards.of(request.getTitle(), request.getContent(), userEntity.getNickName(), request.getBoardsType());
             boards.mapMembers(userEntity);
             boardsRepository.save(boards);
@@ -95,6 +92,7 @@ public class BoardsService {
         }
     }
 
+    @Transactional
     public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest) {
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new
@@ -102,7 +100,7 @@ public class BoardsService {
 
         boards.update(boardsUpdateRequest.getTitle(),
                 boardsUpdateRequest.getContent());
-
+        boardsRepository.save(boards);
         return id;
     }
 
@@ -110,11 +108,11 @@ public class BoardsService {
     public void delete(Long id) {
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
-        log.info("111111111");
+
         //파일 경로 지정
         String path = "src/main/resources/static/images/";
         try {
-            log.info("2222222222");
+
             BoardFiles boardFiles = boardFilesRepository.findByBoardsId(id);
             boardFilesRepository.delete(boardFiles);
             String fullname = path + boardFiles.getFilePath();
@@ -125,9 +123,9 @@ public class BoardsService {
             }
         }
         catch (Exception e){
-            log.info("123123123");
+
         }
-        log.info("3333333");
+
         boardsRepository.delete(boards);
     }
     @Transactional
@@ -162,7 +160,7 @@ public class BoardsService {
     @Transactional
     public List<BoardsWithUserDTO> getBoardsWithUserDTO() {
 
-        List<Boards> boardList = boardsRepository.findAllWithUser();
+        List<Boards> boardList = boardsRepository.findAll();
         Collections.reverse(boardList);
 
         return boardList.stream().map(board -> {
