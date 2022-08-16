@@ -48,7 +48,7 @@ public class TokenProvider {
     }
 
     public  String refreshToken(){  // refresh token 발급
-        Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+        Date expiryDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
 
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512,secret_key)

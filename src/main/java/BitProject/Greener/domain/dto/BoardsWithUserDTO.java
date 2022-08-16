@@ -6,11 +6,10 @@ import BitProject.Greener.common.BoardsType;
 import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.entity.BoardsCategory;
 import BitProject.Greener.domain.entity.UserEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 import lombok.NoArgsConstructor;
+import java.time.format.DateTimeFormatter;
 
 
 @Getter
@@ -24,6 +23,7 @@ public class BoardsWithUserDTO {
     private Long userId;
     private String name;
     private String email;
+    private String bornDate;
     private String nickName;
 
     private Long categoryId;
@@ -38,6 +38,7 @@ public class BoardsWithUserDTO {
         instance.userId = userEntity.getId();
         instance.name = userEntity.getName();
         instance.email = userEntity.getEmail();
+        instance.bornDate= boards.createDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         instance.nickName = userEntity.getNickName();
         instance.categoryId = category.getId();
         instance.categoryName = category.getName();

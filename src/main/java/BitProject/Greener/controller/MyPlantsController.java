@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -32,8 +34,10 @@ public class MyPlantsController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public ResponseEntity<MyPlantsDTO> create(@RequestBody MyPlantsCreateRequest request, HttpServletRequest request2){
-        return ResponseEntity.ok(plantsService.createMyPlants(request, request2));
+    public ResponseEntity<MyPlantsDTO> create(
+            @RequestPart(required = false) MultipartFile file,
+            @RequestPart MyPlantsCreateRequest request, HttpServletRequest request2){
+        return ResponseEntity.ok(plantsService.createMyPlants(request,file, request2));
     }
 
     @PutMapping()

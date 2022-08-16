@@ -5,10 +5,7 @@ import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.controller.request.PageRequestCustom;
 import BitProject.Greener.domain.dto.*;
 import BitProject.Greener.service.BoardsService;
-
-
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -16,15 +13,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.*;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
+
 
 @RequestMapping("/api/v1/boards")
 @RequiredArgsConstructor
@@ -52,16 +50,13 @@ public class BoardsController {
     }
 
 
-
     @GetMapping()
     public ResponseEntity<Page<BoardsWithUserDTO>> getBoardsWithUserDTO(Pageable pageable){
         return ResponseEntity.ok(boardsService.getBoardsWithUserDTO(pageable));
     }
 
     @GetMapping("/{boardsId}/detail")
-    public ResponseEntity<BoardsWithBoardFilesDTO> detail(
-            @PathVariable Long boardsId
-    ){
+    public ResponseEntity<BoardsWithBoardFilesDTO> detail(@PathVariable Long boardsId) throws IOException {
         return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
     }
 
@@ -70,5 +65,11 @@ public class BoardsController {
         return ResponseEntity.ok(boardsService.boardsCategoryList());
     }
 
+
+    @GetMapping(value = "/{boardsId}/detail/images", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> showImage(@PathVariable Long boardsId) throws IOException {
+        BoardsWithBoardFilesDTO imageByteArray = boardsService.getDetailWithBoardFiles(boardsId);
+        return new ResponseEntity<byte[]>(imageByteArray.getImg2(), HttpStatus.OK);
+    }
 
 }
