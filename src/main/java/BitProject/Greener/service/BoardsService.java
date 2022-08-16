@@ -106,6 +106,8 @@ public class BoardsService {
     }
 
     public void delete(Long id) {
+        BoardFiles boards2 = boardFilesRepository.findByBoardsId(id);
+                boardFilesRepository.delete(boards2);
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
