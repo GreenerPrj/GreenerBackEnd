@@ -73,9 +73,10 @@ public class BoardsService {
 
             UserEntity userEntity = userRepository.findByEmail(username);
 //        .orElseThrow(() -> new RuntimeException("아이디 없음"));
-
+            BoardsCategory category = boardsCategoryRepository.findById(request.getCategoryid())
+                .orElseThrow(() -> new RuntimeException("카테고리가 없습니다"));
             Boards boards = Boards.of(request.getTitle(), request.getContent(),
-                userEntity.getNickName(), request.getBoardsType());
+                userEntity.getNickName(), category);
             boards.mapMembers(userEntity);
             boardsRepository.save(boards);
 
