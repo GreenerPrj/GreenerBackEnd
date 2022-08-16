@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,12 +126,14 @@ public class BoardsService {
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
         // 우선 board는 필수니까 DTO로 변환해주고
-
         BoardsWithBoardFilesDTO boardsWithBoardFilesDTO = BoardsWithBoardFilesDTO.convertToBoardDTO(boards);
 
-        String addressPath = "http://localhost:8080/images/";
+        String addressPath = "./src/main/resources/static/images/";
+        InputStream imageStream = new FileInputStream(addressPath + boardFiles.get().getFilePath());
+        byte[] imageByteArray = IOUtils.toByteArray(imageStream);
         try {
-            boardsWithBoardFilesDTO.setImg(addressPath + boardFiles.get().getFilePath());
+            boardsWithBoardFilesDTO.setImg("http://localhost:8080/api/v1/boards/"+boardsId+"/detail/images");
+            boardsWithBoardFilesDTO.setImg2(imageByteArray);
         } catch (Exception e) {}
 
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서

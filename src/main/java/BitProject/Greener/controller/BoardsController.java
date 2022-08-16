@@ -10,6 +10,7 @@ import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
@@ -53,4 +54,11 @@ public class BoardsController {
     public ResponseEntity<BoardsWithBoardFilesDTO> detail(@PathVariable Long boardsId) throws IOException {
         return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
     }
+
+    @GetMapping(value = "/{boardsId}/detail/images", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> showImage(@PathVariable Long boardsId) throws IOException {
+        BoardsWithBoardFilesDTO imageByteArray = boardsService.getDetailWithBoardFiles(boardsId);
+        return new ResponseEntity<byte[]>(imageByteArray.getImg2(), HttpStatus.OK);
+    }
+
 }

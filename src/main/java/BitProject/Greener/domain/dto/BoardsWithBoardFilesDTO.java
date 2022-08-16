@@ -20,6 +20,7 @@ public class BoardsWithBoardFilesDTO {
     private String nickName;
 
     private String img;
+    private byte[] img2;
 
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();
