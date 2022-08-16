@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -108,11 +109,19 @@ public class BoardsService {
 
     public void delete(Long id) {
         BoardFiles boards2 = boardFilesRepository.findByBoardsId(id);
-                boardFilesRepository.delete(boards2);
-        Boards boards = boardsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
-
+        boardFilesRepository.delete(boards2);
+        Boards boards = boardsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
         boardsRepository.delete(boards);
+        //파일 경로 지정
+        String path = "src/main/resources/static/images/";
+        String fullname = path + boards2.getFilePath();
+
+        //현재 게시판에 존재하는 파일객체를 만듬
+        File file = new File(fullname);
+
+        if(file.exists()) { // 파일이 존재하면
+            file.delete(); // 파일 삭제
+        }
     }
 
     public List<Boards> reading() {
