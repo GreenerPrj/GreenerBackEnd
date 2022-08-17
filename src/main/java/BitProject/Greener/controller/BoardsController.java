@@ -2,6 +2,7 @@ package BitProject.Greener.controller;
 
 
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
+import BitProject.Greener.domain.dto.BoardsCategoryDTO;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.BoardsDTO;
@@ -9,6 +10,8 @@ import BitProject.Greener.service.BoardsService;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +49,14 @@ public class BoardsController {
 
 
     @GetMapping()
-    public ResponseEntity<List<BoardsWithUserDTO>> getBoardsWithUserDTO(){
-        return ResponseEntity.ok(boardsService.getBoardsWithUserDTO());
+    public ResponseEntity<Page<BoardsWithUserDTO>> getBoardsWithUserDTO(Pageable pageable){
+        return ResponseEntity.ok(boardsService.getBoardsWithUserDTO(pageable));
+
     }
+
+
+
+
 
     @GetMapping("/{boardsId}/detail")
     public ResponseEntity<BoardsWithBoardFilesDTO> detail(@PathVariable Long boardsId) throws IOException {
@@ -60,5 +68,12 @@ public class BoardsController {
         BoardsWithBoardFilesDTO imageByteArray = boardsService.getDetailWithBoardFiles(boardsId);
         return new ResponseEntity<byte[]>(imageByteArray.getImg2(), HttpStatus.OK);
     }
+
+    @GetMapping("/boardscategory/")
+    public ResponseEntity<List<BoardsCategoryDTO>> getBoardsCategoryDTO(){
+        return ResponseEntity.ok(boardsService.boardsCategoryList());
+
+    }
+
 
 }

@@ -33,16 +33,23 @@ public class Boards extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "boards_category_id", referencedColumnName = "id")
+    private BoardsCategory category;
 
-    @Enumerated(STRING)
-    private BoardsType boardsType;
+    private void mappingCategory(BoardsCategory boardsCategory){
+        this.category = boardsCategory;
+        boardsCategory.mappingPost(this);
+    }
 
 
-    public static Boards of(String title,String content, String nickName ,BoardsType boardsType){
+
+
+    public static Boards of(String title,String content, String nickName ,BoardsCategory category){
         Boards instance = new Boards();
         instance.title = title;
         instance.content = content;
-        instance.boardsType = boardsType;
+        instance.mappingCategory(category);
         instance.nickName = nickName;
         return instance;
     }
