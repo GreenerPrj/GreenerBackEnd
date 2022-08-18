@@ -2,7 +2,6 @@ package BitProject.Greener.domain.entity;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import BitProject.Greener.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +10,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class Plants extends BaseEntity {
+public class Plants{
 
     @GeneratedValue(strategy = IDENTITY)
     @Id
@@ -20,17 +19,14 @@ public class Plants extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String content;
-
-    @Column(nullable = false)
-    private Integer sunShine;
-
-    @Column(nullable = false)
-    private Integer water;
-
-    @Column(nullable = false)
-    private Integer temperature;
-
+    private String imgUrl;
+    private String temperature;
+    private String sunshine;
+    private String place;
+    private String tip;
+    private String springWater;
+    private String summerWater;
+    private String fallWater;
+    private String winterWater;
 
 }
