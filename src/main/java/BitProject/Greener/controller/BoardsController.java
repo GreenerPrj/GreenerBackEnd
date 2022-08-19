@@ -6,15 +6,21 @@ import BitProject.Greener.domain.dto.BoardsCategoryDTO;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.BoardsDTO;
+import BitProject.Greener.domain.dto.request.PageRequestCustom;
+import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.service.BoardsService;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.util.List;
@@ -26,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RestController
 @Log4j2
-public class BoardsController {
+public class BoardsController{
 
     private final BoardsService boardsService;
 
@@ -41,6 +47,9 @@ public class BoardsController {
         return boardsService.update(boardsId,boardsUpdateRequest);
     }
 
+
+
+
     @DeleteMapping("/{boardsId}")
     public ResponseEntity<?> delete(@PathVariable Long boardsId){
         boardsService.delete(boardsId);
@@ -49,10 +58,12 @@ public class BoardsController {
 
 
     @GetMapping()
-    public ResponseEntity<Page<BoardsWithUserDTO>> getBoardsWithUserDTO(Pageable pageable){
+    public ResponseEntity<Page<BoardsWithUserDTO>> getBoardsWithUserDTO(@PageableDefault(size = 30000) Pageable pageable){
         return ResponseEntity.ok(boardsService.getBoardsWithUserDTO(pageable));
 
     }
+
+
 
 
 
@@ -69,11 +80,11 @@ public class BoardsController {
         return new ResponseEntity<byte[]>(imageByteArray.getImg2(), HttpStatus.OK);
     }
 
-    @GetMapping("/boardscategory/")
-    public ResponseEntity<List<BoardsCategoryDTO>> getBoardsCategoryDTO(){
-        return ResponseEntity.ok(boardsService.boardsCategoryList());
-
-    }
+//    @GetMapping("/boardscategory/")
+//    public ResponseEntity<List<BoardsCategoryDTO>> getBoardsCategoryDTO(){
+//        return ResponseEntity.ok(boardsService.boardsCategoryList());
+//
+//    }
 
 
 }
