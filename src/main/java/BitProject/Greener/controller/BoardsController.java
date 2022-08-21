@@ -45,7 +45,7 @@ public class BoardsController{
     @PutMapping("/{boardsId}")
     public Long update(@PathVariable Long boardsId,
         @RequestPart BoardsUpdateRequest boardsUpdateRequest,
-        @RequestPart(required = false) List<MultipartFile> files
+        @RequestPart(required = false) MultipartFile files
 
     ) {
         return boardsService.update(boardsId,boardsUpdateRequest, files);
