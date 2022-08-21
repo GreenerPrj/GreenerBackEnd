@@ -45,9 +45,10 @@ public class MyPlantsController {
         return plantsService.update(id, myPlantsUpdateRequest);
     }
 
-    @DeleteMapping()
-    public void delete(@PathVariable Long id){
-        plantsService.delete(id);
+    @DeleteMapping("/{myPlantsId}")
+    public ResponseEntity<?> delete(@PathVariable Long myPlantsId){
+        plantsService.delete(myPlantsId);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @GetMapping()

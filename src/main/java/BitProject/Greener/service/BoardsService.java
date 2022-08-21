@@ -119,7 +119,7 @@ public class BoardsService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
         //파일 경로 지정
-        String path = "src/main/resources/static/images/";
+        String path = "src/main/resources/static/images/boards";
         try {
 
             BoardFiles boardFiles = boardFilesRepository.findByBoardsId(id);
