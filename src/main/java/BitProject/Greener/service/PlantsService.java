@@ -104,7 +104,7 @@ public class PlantsService {
         MyPlants myPlants = myPlantsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
 
-        String path = "src/main/resources/static/images/myplants"
+        String path = "src/main/resources/static/images/myplants";
             myPlantsRepository.delete(myPlants);
     }
 
