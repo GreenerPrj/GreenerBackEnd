@@ -43,8 +43,9 @@ public class BoardsController{
         return ResponseEntity.ok(boardsService.createBoards(request, file, request2));
     }
     @PutMapping("/{boardsId}")
-    public Long update(@PathVariable Long boardsId, @RequestPart BoardsUpdateRequest boardsUpdateRequest,
-        @RequestPart List<MultipartFile> files
+    public Long update(@PathVariable Long boardsId,
+        @RequestPart BoardsUpdateRequest boardsUpdateRequest,
+        @RequestPart(required = false) List<MultipartFile> files
 
     ) {
         return boardsService.update(boardsId,boardsUpdateRequest, files);
