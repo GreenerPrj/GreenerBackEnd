@@ -51,6 +51,8 @@ public class BoardsService {
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
 
+    private static final String absPath = "src/main/resources/static/images/";
+
 
 //    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
 //        UserEntity userEntity = userRepository.findById(request.getMembersid())
@@ -102,14 +104,55 @@ public class BoardsService {
     }
 
     @Transactional
-    public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest) {
+    public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest, List<MultipartFile> files) {
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new
                         IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-
+        // 업데이트
         boards.update(boardsUpdateRequest.getTitle(),
                 boardsUpdateRequest.getContent());
-        boardsRepository.save(boards);
+
+        // 기존 이미지 삭제 후 다시 요청온 이미지 저장
+
+        try {
+
+            BoardFiles boardFiles = boardFilesRepository.findByBoardsId(id);
+            boardFilesRepository.delete(boardFiles);
+            String fullname = absPath + boardFiles.getFilePath();
+            //현재 게시판에 존재하는 파일객체를 만듬
+            File file = new File(fullname);
+            if (file.exists()) { // 파일이 존재하면
+                file.delete(); // 파일 삭제
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(!files.isEmpty()){
+            files.stream().map(file -> {
+                String originFileName = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString();
+                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String filePath = savePath + "/" + fileName + ".png";
+                String filePath2 = Paths.get(absPath+savePath, fileName+".png").toString();
+                File saveFile = new File(absPath+savePath);
+                if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
+                    saveFile.mkdir();
+                }
+
+                try {
+                    file.transferTo(Paths.get(filePath2)); // 사진저장
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
+                boardFiles.mapBoards(boards);
+                return boardFilesRepository.save(boardFiles);
+            });
+
+        }
+
         return id;
     }
 
