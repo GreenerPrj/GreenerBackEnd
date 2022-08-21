@@ -166,14 +166,18 @@ public class BoardsService {
         String path = "src/main/resources/static/images/";
         try {
 
-            BoardFiles boardFiles = boardFilesRepository.findByBoardsId(id);
-            boardFilesRepository.delete(boardFiles);
-            String fullname = path + boardFiles.getFilePath();
-            //현재 게시판에 존재하는 파일객체를 만듬
-            File file = new File(fullname);
-            if (file.exists()) { // 파일이 존재하면
-                file.delete(); // 파일 삭제
-            }
+
+            boardFilesRepository.findByBoardsId(id).ifPresent(boardFiles -> {
+                String fullname = path + boardFiles.getFilePath();
+                //현재 게시판에 존재하는 파일객체를 만듬
+                File file = new File(fullname);
+                if (file.exists()) { // 파일이 존재하면
+                    file.delete(); // 파일 삭제
+                }
+                boardFilesRepository.delete(boardFiles);
+            });
+
+
         }
         catch (Exception e){
 
