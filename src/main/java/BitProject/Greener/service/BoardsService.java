@@ -115,15 +115,16 @@ public class BoardsService {
         // 기존 이미지 삭제 후 다시 요청온 이미지 저장
 
         try {
+            boardFilesRepository.findByBoardsId(id).ifPresent(boardFiles -> {
+                String fullname = absPath + boardFiles.getFilePath();
+                //현재 게시판에 존재하는 파일객체를 만듬
+                File file = new File(fullname);
+                if (file.exists()) { // 파일이 존재하면
+                    file.delete(); // 파일 삭제
+                }
+                boardFilesRepository.delete(boardFiles);
+            });
 
-            BoardFiles boardFiles = boardFilesRepository.findByBoardsId(id);
-            boardFilesRepository.delete(boardFiles);
-            String fullname = absPath + boardFiles.getFilePath();
-            //현재 게시판에 존재하는 파일객체를 만듬
-            File file = new File(fullname);
-            if (file.exists()) { // 파일이 존재하면
-                file.delete(); // 파일 삭제
-            }
         }
         catch (Exception e){
             e.printStackTrace();
