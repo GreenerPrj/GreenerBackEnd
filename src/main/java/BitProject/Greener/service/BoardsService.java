@@ -211,7 +211,7 @@ public class BoardsService {
     }
     @Transactional
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId) throws IOException {
-            // 게시글 찾기
+        // 게시글 찾기
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
