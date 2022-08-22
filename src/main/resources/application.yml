@@ -19,8 +19,6 @@ spring:
       maxRequestSize: 50MB
       location:
 
-
-
 jackson:
   serialization:
     fail-on-empty-beans=false:
@@ -34,3 +32,16 @@ server:
 
 
 SECRET_KEY : hello
+
+cloud:
+  aws:
+    credentials:
+      accessKey:       # AWS IAM AccessKey 적기
+      secretKey:    # AWS IAM SecretKey 적기
+    s3:
+      bucket: cl6-2    # ex) marryting-gyunny
+      dir: /image # ex) /gyunny
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
