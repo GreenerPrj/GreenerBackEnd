@@ -51,7 +51,7 @@ public class BoardsService {
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
 
-    private static final String absPath = "src/main/resources/static/images/";
+    private static final String absPath = "src/main/resources/static/images/boards";
 
 
 //    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
@@ -108,17 +108,21 @@ public class BoardsService {
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new
                         IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        // 업데이트
+
+//         업데이트
         boards.update(boardsUpdateRequest.getTitle(),
                 boardsUpdateRequest.getContent());
 
-        // 기존 이미지 삭제 후 다시 요청온 이미지 저장
+//         기존 이미지 삭제 후 다시 요청온 이미지 저장
 
         try {
             boardFilesRepository.findByBoardsId(id).ifPresent(boardFiles -> {
                 String fullname = absPath + boardFiles.getFilePath();
+                String temp_filename = boardFiles.getFileName();
                 //현재 게시판에 존재하는 파일객체를 만듬
                 File files = new File(fullname);
+                log.info(temp_filename);
+                log.info(file.getOriginalFilename());
                 if (files.exists()) { // 파일이 존재하면
                     files.delete(); // 파일 삭제
                 }

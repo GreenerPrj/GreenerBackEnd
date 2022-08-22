@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MyPlantsUpdateRequest {
     private String name;
-    private LocalDateTime bornDate;
+    private String bornDate;
 
     @Builder
-    public MyPlantsUpdateRequest(String name, LocalDateTime bornDate) {
+    public MyPlantsUpdateRequest(String name, String bornDate) {
         this.name = name;
         this.bornDate = bornDate;
     }
