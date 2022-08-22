@@ -12,12 +12,10 @@ import java.time.LocalDateTime;
 public class MyPlantsUpdateRequest {
     private String name;
     private LocalDateTime bornDate;
-    private String imagePath;
 
     @Builder
-    public MyPlantsUpdateRequest(String name, LocalDateTime bornDate, String imagePath) {
+    public MyPlantsUpdateRequest(String name, LocalDateTime bornDate) {
         this.name = name;
         this.bornDate = bornDate;
-        this.imagePath = imagePath;
     }
 }
