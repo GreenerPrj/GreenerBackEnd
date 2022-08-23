@@ -51,7 +51,7 @@ public class BoardsService {
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
 
-    private static final String absPath = "src/main/resources/static/images/";
+    private static final String absPath = "src/main/resources/static/images/boards";
 
 
 //    public BoardsDTO createBoards(BoardsCreateRequest request, MultipartFile file) {
@@ -105,52 +105,58 @@ public class BoardsService {
 
     @Transactional
     public Long update(Long id, BoardsUpdateRequest boardsUpdateRequest, MultipartFile file) {
+
         Boards boards = boardsRepository.findById(id)
                 .orElseThrow(() -> new
                         IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        // 업데이트
+
+//         업데이트
         boards.update(boardsUpdateRequest.getTitle(),
                 boardsUpdateRequest.getContent());
 
-        // 기존 이미지 삭제 후 다시 요청온 이미지 저장
+//         기존 이미지 삭제 후 다시 요청온 이미지 저장
 
-        try {
-            boardFilesRepository.findByBoardsId(id).ifPresent(boardFiles -> {
-                String fullname = absPath + boardFiles.getFilePath();
-                //현재 게시판에 존재하는 파일객체를 만듬
-                File files = new File(fullname);
-                if (files.exists()) { // 파일이 존재하면
-                    files.delete(); // 파일 삭제
+            try {
+                boardFilesRepository.findByBoardsId(id).ifPresent(boardFiles -> {
+                    String fullname = absPath + "/" + boardFiles.getFilePath();
+                    //현재 게시판에 존재하는 파일객체를 만듬
+                    File files = new File(fullname);
+
+                    if (file!=null&&!boardFiles.getOriginFileName().equals(file.getOriginalFilename())) { // 파일이 존재하면
+                        files.delete(); // 파일 삭제
+                        boardFilesRepository.delete(boardFiles);
+                    }
+
+                    log.info("22222");
+
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (file != null) {
+                    String originFileName = file.getOriginalFilename();
+                    String fileName = UUID.randomUUID().toString();
+                    String absPath = "src/main/resources/static/images/";
+                    String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    String filePath = savePath + "/" + fileName + ".png";
+                    String filePath2 = Paths.get(absPath + savePath, fileName + ".png").toString();
+                    File saveFile = new File(absPath + savePath);
+
+                    if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
+                        saveFile.mkdir();
+                    }
+
+                    try {
+                        file.transferTo(Paths.get(filePath2)); // 사진저장
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
+                    boardFiles.mapBoards(boards);
+                    boardFilesRepository.save(boardFiles);
                 }
-                boardFilesRepository.delete(boardFiles);
-            });
 
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if (file != null) {
-                String originFileName = file.getOriginalFilename();
-                String fileName = UUID.randomUUID().toString();
-                String absPath = "src/main/resources/static/images/";
-                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String filePath = savePath + "/" + fileName + ".png";
-                String filePath2 = Paths.get(absPath+savePath, fileName+".png").toString();
-                File saveFile = new File(absPath+savePath);
-
-                if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
-                    saveFile.mkdir();
-                }
-
-                try {
-                    file.transferTo(Paths.get(filePath2)); // 사진저장
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                BoardFiles boardFiles = BoardFiles.of(originFileName, fileName, filePath);
-                boardFiles.mapBoards(boards);
-                boardFilesRepository.save(boardFiles);
-            }
 //            if(!file.isEmpty()){
 //                files.stream().map(file -> {
 //                    String originFileName = file.getOriginalFilename();
@@ -174,7 +180,7 @@ public class BoardsService {
 //                });
 
 //            }
-        }
+            }
 
 
 

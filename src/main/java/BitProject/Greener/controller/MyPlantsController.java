@@ -40,10 +40,12 @@ public class MyPlantsController {
         return ResponseEntity.ok(plantsService.createMyPlants(request,file, request2));
     }
 
-    @PutMapping()
-    public Long update(@PathVariable Long id, @RequestBody MyPlantsUpdateRequest myPlantsUpdateRequest){
-        return plantsService.update(id, myPlantsUpdateRequest);
-    }
+//    @PutMapping()
+//    public Long update(@PathVariable Long id, @RequestBody MyPlantsUpdateRequest myPlantsUpdateRequest,
+//                       @RequestPart(required = false) MultipartFile files
+//    ){
+//        return plantsService.update(id, myPlantsUpdateRequest,files);
+//    }
 
     @DeleteMapping("/{myPlantsId}")
     public ResponseEntity<?> delete(@PathVariable Long myPlantsId){

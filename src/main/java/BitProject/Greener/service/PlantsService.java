@@ -5,14 +5,11 @@ import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
 
-import BitProject.Greener.repository.TokenRespository;
-import BitProject.Greener.repository.UserRepository;
+import BitProject.Greener.repository.*;
 import BitProject.Greener.domain.entity.MyPlants;
 import BitProject.Greener.domain.entity.Plants;
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
-import BitProject.Greener.repository.MyPlantsRepository;
-import BitProject.Greener.repository.PlantsRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,9 +36,12 @@ public class PlantsService {
 
     private final PlantsRepository plantsRepository;
     private final MyPlantsRepository myPlantsRepository;
+    private final MyPlantsFilesRepository myPlantsFilesRepository;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private static final String absPath = "src/main/resources/static/images/myPlants";
 
+    @Transactional
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
         String username = null;
         try {
@@ -75,7 +75,7 @@ public class PlantsService {
                 e.printStackTrace();
             }
             // MyPlants생성 -> static 생성자 사용(빌더패턴 사용해도 무방)
-            MyPlants myPlants = MyPlants.of(request.getName(), LocalDateTime.now(), originFileName, fileName, filePath2, filePath);
+            MyPlants myPlants = MyPlants.of(request.getName(), LocalDateTime.now(), originFileName, fileName, filePath);
             // 외래키 등록(연관관계 매핑)
             myPlants.mapMembersAndPlants(userEntity, plants);
             // 저장
@@ -89,22 +89,37 @@ public class PlantsService {
     }
 
 
-    public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest){
-        MyPlants myPlants = myPlantsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
-
-        myPlants.update(myPlantsUpdateRequest.getName(),
-                myPlantsUpdateRequest.getBornDate(),
-                myPlantsUpdateRequest.getImagePath());
-
-        return id;
-    }
+//    @Transactional
+//    public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest, MultipartFile file){
+//        MyPlants myPlants = myPlantsRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
+//
+//        myPlants.update(myPlantsUpdateRequest.getName(),
+//                myPlantsUpdateRequest.getBornDate());
+//
+//
+//        return id;
+//    }
 
     public void delete(Long id){
         MyPlants myPlants = myPlantsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
 
         String path = "src/main/resources/static/images/myplants";
+        try{
+
+            myPlantsFilesRepository.findById(id).ifPresent(myPlantsFiles -> {
+                String fullname = path + myPlantsFiles.getFilePath();
+                File file = new File(fullname);
+                if(file.exists()){
+                    file.delete();
+                }
+                myPlantsFilesRepository.delete(myPlantsFiles);
+            });
+        }
+        catch(Exception e){
+
+        }
             myPlantsRepository.delete(myPlants);
     }
 

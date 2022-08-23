@@ -35,8 +35,6 @@ public class MyPlants{
     @Column(nullable = false)
     private LocalDateTime bornDate;
 
-    @Column(nullable = false)
-    private String imagePath;
 
     @Column(nullable = false)
     private String originFileName;
@@ -51,21 +49,19 @@ public class MyPlants{
 
 
 
-    public static MyPlants of(String name, LocalDateTime bornDate,String originFileName, String fileName, String filePath, String imagePath){
+    public static MyPlants of(String name, LocalDateTime bornDate,String originFileName, String fileName, String filePath){
         MyPlants instance = new MyPlants();
         instance.name = name;
         instance.bornDate = bornDate;
         instance.originFileName = originFileName;
         instance.fileName = fileName;
         instance.filePath = filePath;
-        instance.imagePath = imagePath;
         return instance;
     }
 
-    public void update(String name, LocalDateTime bornDate, String imagePath) {
+    public void update(String name, LocalDateTime bornDate) {
         this.name = name;
         this.bornDate = bornDate;
-        this.imagePath = imagePath;
     }
 
     public void mapMembersAndPlants(UserEntity userEntity, Plants plants){
