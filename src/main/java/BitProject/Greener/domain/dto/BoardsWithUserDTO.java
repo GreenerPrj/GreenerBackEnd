@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardsWithUserDTO {
+public class BoardsWithUserDTO{
 
     private Long boardsId;
     private String title;
@@ -27,6 +27,7 @@ public class BoardsWithUserDTO {
     private String nickName;
     private Long categoryId;
     private BoardsType categoryName;
+
 
 
 

@@ -18,9 +18,9 @@ import org.springframework.context.annotation.Primary;
 public class AwsConfig {
 
 //    @Value("${cloud.aws.credentials.accessKey}")
-    public String accessKey = "AKIASYDPHV6B45PSDRPH"; // IAM Access Key
+    public String accessKey; // IAM Access Key
 //    @Value("${cloud.aws.credentials.secretKey}")
-    public String secretKey = "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"; // IAM Secret Key
+    public String secretKey; // IAM Secret Key
 //    @Value("${cloud.aws.region.static")
     public String region = "ap-northeast-2"; // Bucket Region
 

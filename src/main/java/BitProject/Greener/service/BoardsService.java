@@ -3,23 +3,15 @@ package BitProject.Greener.service;
 import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.dto.*;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
-import BitProject.Greener.domain.entity.BoardFiles;
-import BitProject.Greener.domain.entity.Boards;
-import BitProject.Greener.domain.entity.BoardsCategory;
-import BitProject.Greener.domain.entity.UserEntity;
+import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
-import BitProject.Greener.repository.BoardFilesRepository;
-import BitProject.Greener.repository.BoardsCategoryRepository;
-import BitProject.Greener.repository.UserRepository;
-import BitProject.Greener.repository.BoardsRepository;
+import BitProject.Greener.repository.*;
 
 import java.io.*;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +41,7 @@ public class BoardsService {
     private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
-
+    private final CommentsRepository commentsRepository;
     private static final String absPath = "src/main/resources/static/images/boards";
 
 
@@ -218,8 +209,13 @@ public class BoardsService {
     @Transactional
     public BoardsWithBoardFilesDTO getDetailWithBoardFiles(Long boardsId) throws IOException {
         // 게시글 찾기
+        log.info(boardsId);
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+
+        Optional<List<Comments>> commentsList = commentsRepository.findByBoardsId(boardsId);
+
+//        comments.get().forEach(Comments -> Comments.getContent());
 
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
@@ -240,6 +236,12 @@ public class BoardsService {
 
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
+        List<String> comments = commentsList.get().stream().map(Comments -> {
+            return Comments.getContent();
+        }).collect(Collectors.toList());
+
+        boardsWithBoardFilesDTO.mapComments(comments);
+
         // 리턴해주면 끝
         return boardsWithBoardFilesDTO;
 

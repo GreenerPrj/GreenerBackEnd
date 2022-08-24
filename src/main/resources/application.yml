@@ -19,9 +19,9 @@ spring:
       maxRequestSize: 50MB
       location:
 
-jackson:
-  serialization:
-    fail-on-empty-beans=false:
+  jackson:
+    serialization:
+      fail-on-empty-beans : false
 #logging:
 #  level:
 #    org.springframework.orm.jpa: DEBUG
@@ -36,8 +36,8 @@ SECRET_KEY : hello
 cloud:
   aws:
     credentials:
-      accessKey:  AKIASYDPHV6B45PSDRPH  # AWS IAM AccessKey 적기
-      secretKey: UpwfGtbdCvkphkIIamhWXAqGv5qNHtfs2Wt44c/t #AWS IAM SecretKey 적기
+      accessKey:    # AWS IAM AccessKey 적기
+      secretKey:  #AWS IAM SecretKey 적기
     s3:
       bucket: cl6-2    # ex) marryting-gyunny
       dir: /image # ex) /gyunny

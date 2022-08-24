@@ -2,23 +2,26 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 
-import BitProject.Greener.domain.entity.UserEntity;
+import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
+import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
 
 import BitProject.Greener.repository.*;
-import BitProject.Greener.domain.entity.MyPlants;
-import BitProject.Greener.domain.entity.Plants;
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,6 +49,19 @@ public class PlantsService {
     public List<Plants> getplats(){
         return plantsRepository.findAll();
     }
+
+    @Transactional
+    public Plants getDetailWithBoardFiles(Long boardsId) throws IOException {
+        // 게시글 찾기
+
+        Plants plants = plantsRepository.findById(boardsId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+
+        return plants;
+
+    }
+
+
     @Transactional
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
         String username = null;
