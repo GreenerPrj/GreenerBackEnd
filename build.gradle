@@ -33,8 +33,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	// https://mvnrepository.com/artifact/commons-io/commons-io
 	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-	//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.260'
+
+//	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.260'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'com.amazonaws:aws-java-sdk:1.11.404'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

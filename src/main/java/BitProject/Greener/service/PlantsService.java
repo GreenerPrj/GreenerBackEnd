@@ -42,6 +42,10 @@ public class PlantsService {
     private static final String absPath = "src/main/resources/static/images/myPlants";
 
     @Transactional
+    public List<Plants> getplats(){
+        return plantsRepository.findAll();
+    }
+    @Transactional
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
         String username = null;
         try {
