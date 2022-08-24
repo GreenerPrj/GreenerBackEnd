@@ -1,6 +1,7 @@
 package BitProject.Greener.controller;
 
 
+import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 
 
@@ -32,7 +33,6 @@ public class MyPlantsController {
 //        plantsService.create(getMyPlantsDTO());
 //    }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
     public ResponseEntity<MyPlantsDTO> create(
             @RequestPart(required = false) MultipartFile file,
@@ -40,12 +40,14 @@ public class MyPlantsController {
         return ResponseEntity.ok(plantsService.createMyPlants(request,file, request2));
     }
 
-//    @PutMapping()
-//    public Long update(@PathVariable Long id, @RequestBody MyPlantsUpdateRequest myPlantsUpdateRequest,
-//                       @RequestPart(required = false) MultipartFile files
-//    ){
-//        return plantsService.update(id, myPlantsUpdateRequest,files);
-//    }
+    @PutMapping("/{myPlantsId}")
+    public Long update(@PathVariable Long myPlantsId,
+                       @RequestPart MyPlantsUpdateRequest myplantsUpdateRequest,
+                       @RequestPart(required = false) MultipartFile files
+
+    ) {
+        return plantsService.update(myPlantsId,myplantsUpdateRequest, files);
+    }
 
     @DeleteMapping("/{myPlantsId}")
     public ResponseEntity<?> delete(@PathVariable Long myPlantsId){

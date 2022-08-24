@@ -1,13 +1,12 @@
 package BitProject.Greener.service;
 
+import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 
-import BitProject.Greener.domain.entity.UserEntity;
+import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
 
 import BitProject.Greener.repository.*;
-import BitProject.Greener.domain.entity.MyPlants;
-import BitProject.Greener.domain.entity.Plants;
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,7 +28,6 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class PlantsService {
@@ -47,59 +45,117 @@ public class PlantsService {
         try {
             String token = tokenProvider.parseBearerToken(request2);
             username = tokenProvider.tokenEncry(token);
-        }
-        catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             username = e.getClaims().getSubject();
-        }
-        finally {
+        } finally {
 
             UserEntity userEntity = userRepository.findByEmail(username);
-            Plants plants = plantsRepository.findById(request.getPlantsId()).orElseThrow(() -> new RuntimeException("식물 없음"));
+            Plants plants = plantsRepository.findById(request.getPlantsId())
+                    .orElseThrow(() -> new RuntimeException("식물 없음"));
+            log.info(request.getBornDate());
+            MyPlants myPlants = MyPlants.of(request.getName(), request.getBornDate());
 
-            String originFileName = file.getOriginalFilename();
-            String fileName = UUID.randomUUID().toString();
-            String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-            File saveFile = new File(savePath);
-            if (!saveFile.exists()) {
-                saveFile.mkdir();
-            }
-
-            String filePath = savePath + "\\" + fileName;
-            String filePath2 = Paths.get(savePath, fileName).toString();
-
-
-            try {
-                file.transferTo(Paths.get(filePath2));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            // MyPlants생성 -> static 생성자 사용(빌더패턴 사용해도 무방)
-            MyPlants myPlants = MyPlants.of(request.getName(), LocalDateTime.now(), originFileName, fileName, filePath);
-            // 외래키 등록(연관관계 매핑)
             myPlants.mapMembersAndPlants(userEntity, plants);
-            // 저장
-            log.info(userEntity.getId());
             myPlantsRepository.save(myPlants);
-            // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
+
+
+            if (file != null) {
+                String originFileName = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString();
+                String absPath = "src/main/resources/static/images/";
+                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String filePath = savePath + "/" + fileName + ".png";
+                String filePath2 = Paths.get(absPath + savePath, fileName + ".png").toString();
+                File saveFile = new File(absPath + savePath);
+
+                if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
+                    saveFile.mkdir();
+                }
+
+                try {
+                    file.transferTo(Paths.get(filePath2)); // 사진저장
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
+                // 외래키 등록(연관관계 매핑)
+                myPlantsFiles.mapMyPlants(myPlants);
+                // 저장
+                myPlantsRepository.save(myPlants);
+                // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
+
+
+            }
             return MyPlantsDTO.convertToDTO(myPlants);
+        }
 
         }
 
-    }
+        @Transactional
+        public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest, MultipartFile file) {
+
+            MyPlants myPlants = myPlantsRepository.findById(id)
+                    .orElseThrow(() -> new
+                            IllegalArgumentException("해당 식물이 존재하지 않습니다."));
+
+//         업데이트
+            myPlants.update(myPlantsUpdateRequest.getName(),
+                    myPlantsUpdateRequest.getBornDate());
+
+//         기존 이미지 삭제 후 다시 요청온 이미지 저장
+
+            try {
+                myPlantsFilesRepository.findByMyPlantsId(id).ifPresent(myPlantsFiles -> {
+                    String fullname = absPath + "/" + myPlantsFiles.getFilePath();
+                    //현재 게시판에 존재하는 파일객체를 만듬
+                    File files = new File(fullname);
+
+                    if (file!=null&&!myPlantsFiles.getOriginFileName().equals(file.getOriginalFilename())) { // 파일이 존재하면
+                        files.delete(); // 파일 삭제
+                        myPlantsFilesRepository.delete(myPlantsFiles);
+                    }
 
 
-//    @Transactional
-//    public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest, MultipartFile file){
-//        MyPlants myPlants = myPlantsRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
-//
-//        myPlants.update(myPlantsUpdateRequest.getName(),
-//                myPlantsUpdateRequest.getBornDate());
-//
-//
-//        return id;
-//    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (file != null) {
+                    String originFileName = file.getOriginalFilename();
+                    String fileName = UUID.randomUUID().toString();
+                    String absPath = "src/main/resources/static/images/";
+                    String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    String filePath = savePath + "/" + fileName + ".png";
+                    String filePath2 = Paths.get(absPath + savePath, fileName + ".png").toString();
+                    File saveFile = new File(absPath + savePath);
+
+                    if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
+                        saveFile.mkdir();
+                    }
+
+                    try {
+                        file.transferTo(Paths.get(filePath2)); // 사진저장
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
+                    myPlantsFiles.mapMyPlants(myPlants);
+                    myPlantsFilesRepository.save(myPlantsFiles);
+                }
+
+            }
+
+
+
+            return id;
+        }
+
+
+
+
 
     public void delete(Long id){
         MyPlants myPlants = myPlantsRepository.findById(id)

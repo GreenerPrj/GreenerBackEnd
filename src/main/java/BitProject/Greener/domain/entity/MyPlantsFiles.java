@@ -20,13 +20,13 @@ public class MyPlantsFiles extends BaseEntity {
     @JoinColumn(name = "myPlants_id", referencedColumnName = "id")
     private MyPlants myPlants;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String originFileName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String fileName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String filePath;
 
     public static MyPlantsFiles of(String originFileName, String fileName, String filePath) {

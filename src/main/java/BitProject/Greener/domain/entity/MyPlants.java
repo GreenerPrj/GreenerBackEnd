@@ -29,37 +29,26 @@ public class MyPlants{
     @JoinColumn(name = "members_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String name;
 
-    @Column(nullable = false)
-    private LocalDateTime bornDate;
-
-
-    @Column(nullable = false)
-    private String originFileName;
-
-    @Column(nullable = false)
-    private String fileName;
-
-    @Column(nullable = false)
-    private String filePath;
+    @Column(nullable = true)
+    private String bornDate;
 
 
 
 
 
-    public static MyPlants of(String name, LocalDateTime bornDate,String originFileName, String fileName, String filePath){
+
+
+    public static MyPlants of(String name, String bornDate){
         MyPlants instance = new MyPlants();
         instance.name = name;
         instance.bornDate = bornDate;
-        instance.originFileName = originFileName;
-        instance.fileName = fileName;
-        instance.filePath = filePath;
         return instance;
     }
 
-    public void update(String name, LocalDateTime bornDate) {
+    public void update(String name, String bornDate) {
         this.name = name;
         this.bornDate = bornDate;
     }
