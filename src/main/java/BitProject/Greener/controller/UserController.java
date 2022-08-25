@@ -1,8 +1,10 @@
 package BitProject.Greener.controller;
 
+import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.domain.dto.UserDto;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.service.UserServiceImple;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,14 @@ public class UserController {
             return ResponseEntity.ok().body("logout");
         }
         return ResponseEntity.ok().body("error");
+    }
+
+    @GetMapping("/{userId}/myplants")
+    public ResponseEntity<List<MyPlantsDTO>> getMyPlants(
+        @PathVariable Long userId
+    ){
+        return ResponseEntity.ok(userService.getMyPlants(userId));
+
     }
 
 }
