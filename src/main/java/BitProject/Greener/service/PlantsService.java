@@ -55,7 +55,7 @@ public class PlantsService {
             log.info(request.getBornDate());
             MyPlants myPlants = MyPlants.of(request.getName(), request.getBornDate());
 
-            myPlants.mapMembersAndPlants(userEntity, plants);
+            myPlants.mapMembersAndPlants(userEntity,plants);
             myPlantsRepository.save(myPlants);
 
 
@@ -78,10 +78,11 @@ public class PlantsService {
                     e.printStackTrace();
                 }
 
-
+                log.info(fileName);
                 MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
                 // 외래키 등록(연관관계 매핑)
                 myPlantsFiles.mapMyPlants(myPlants);
+
                 // 저장
                 myPlantsRepository.save(myPlants);
                 // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
