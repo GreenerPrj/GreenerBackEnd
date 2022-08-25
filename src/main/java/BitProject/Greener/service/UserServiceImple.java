@@ -78,6 +78,7 @@ public class UserServiceImple implements UserService {
     @Override
     public List<MyPlantsDTO> getMyPlants(Long userId) {
         List<MyPlants> myPlants = myPlantsRepository.getMyPlantsByUserId(userId);
+        log.info(myPlants.size());
         return myPlants.stream().map(MyPlantsDTO::convertToDTO).collect(Collectors.toList());
     }
 }
