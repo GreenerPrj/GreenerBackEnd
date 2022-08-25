@@ -1,11 +1,7 @@
 package BitProject.Greener.service;
-
-import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
-
 import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
-
 import BitProject.Greener.repository.*;
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
@@ -15,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.nio.file.Paths;
@@ -23,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -38,6 +32,13 @@ public class PlantsService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private static final String absPath = "src/main/resources/static/images/myPlants";
+
+
+
+    @Transactional
+    public List<Plants> getplats(){
+        return plantsRepository.findAll();
+    }
 
     @Transactional
     public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
