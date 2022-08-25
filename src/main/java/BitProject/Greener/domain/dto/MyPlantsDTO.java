@@ -12,7 +12,7 @@ public class MyPlantsDTO{
 
     private Long id;
     private String name;
-    private String bornDate;
+    private LocalDateTime bornDate;
 
     public static MyPlantsDTO convertToDTO(MyPlants myPlants){
         MyPlantsDTO myPlantsDTO = new MyPlantsDTO();

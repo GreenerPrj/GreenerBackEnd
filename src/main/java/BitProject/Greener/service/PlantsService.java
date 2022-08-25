@@ -10,6 +10,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,13 +69,11 @@ public class PlantsService {
         } catch (ExpiredJwtException e) {
             username = e.getClaims().getSubject();
         } finally {
-
             UserEntity userEntity = userRepository.findByEmail(username);
             Plants plants = plantsRepository.findById(request.getPlantsId())
                     .orElseThrow(() -> new RuntimeException("식물 없음"));
-            log.info(request.getBornDate());
-            MyPlants myPlants = MyPlants.of(request.getName(), request.getBornDate());
 
+            MyPlants myPlants = MyPlants.of(request.getName(),LocalDateTime.now());
             myPlants.mapMembersAndPlants(userEntity,plants);
             myPlantsRepository.save(myPlants);
 
@@ -99,12 +98,14 @@ public class PlantsService {
                 }
 
                 log.info(fileName);
+                log.info(originFileName);
+                log.info(filePath);
                 MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
                 // 외래키 등록(연관관계 매핑)
                 myPlantsFiles.mapMyPlants(myPlants);
 
                 // 저장
-                myPlantsRepository.save(myPlants);
+                myPlantsFilesRepository.save(myPlantsFiles);
                 // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
 
 
