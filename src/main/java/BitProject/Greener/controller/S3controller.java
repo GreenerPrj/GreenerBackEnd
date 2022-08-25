@@ -4,7 +4,7 @@ package BitProject.Greener.controller;
 import BitProject.Greener.service.S3service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,7 +53,9 @@ public class S3controller {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("images") MultipartFile multipartFile) throws IOException {
         return ResponseEntity.ok(
+
                 s3service.upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getSize())
+
         );
     }
 

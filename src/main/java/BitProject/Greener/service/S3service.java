@@ -30,10 +30,9 @@ public class S3service {
 
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentLength(fileSize);
+
         amazonS3Client.putObject(bucket, s3FileName, inputStream, objMeta);
 
         return amazonS3Client.getUrl(bucket, dir + s3FileName).toString();
     }
 }
-
-

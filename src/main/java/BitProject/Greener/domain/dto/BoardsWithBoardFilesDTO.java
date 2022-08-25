@@ -4,6 +4,10 @@ package BitProject.Greener.domain.dto;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.Consumer;
+
+import BitProject.Greener.domain.entity.Comments;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +26,8 @@ public class BoardsWithBoardFilesDTO {
     private byte[] img2;
     private Long userId;
 
+    private List<String> comment_content;
+
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();
         instance.boardsId = boards.getId();
@@ -29,6 +35,7 @@ public class BoardsWithBoardFilesDTO {
         instance.content = boards.getContent();
         instance.createDate = boards.createDateTime();
         instance.nickName = boards.getNickName();
+
         return instance;
     }
 
@@ -38,4 +45,10 @@ public class BoardsWithBoardFilesDTO {
         this.filePath = boardFiles.getFilePath();
     }
 
+
+
+
+    public void mapComments(List<String> comments) {
+        this.comment_content = comments;
+    }
 }
