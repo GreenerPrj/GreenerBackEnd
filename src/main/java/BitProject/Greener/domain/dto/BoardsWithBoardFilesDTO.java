@@ -28,7 +28,7 @@ public class BoardsWithBoardFilesDTO {
 
     private List<String> comment_content;
     private List<String> comment_nickName;
-    private List<LocalDateTime> comment_createDate;
+    private List<LocalDateTime> comment_createDateTime;
 
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();
@@ -52,7 +52,7 @@ public class BoardsWithBoardFilesDTO {
 
     public void mapComments(List<String> comments, List<LocalDateTime> comments1, List<String> comments2) {
         this.comment_content = comments;
-        this.comment_createDate = comments1;
+        this.comment_createDateTime = comments1;
         this.comment_nickName = comments2;
     }
 

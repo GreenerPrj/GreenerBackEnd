@@ -31,11 +31,11 @@ public class CommentsService {
         if (Objects.nonNull(request.getParentCommentsId())) {
             Comments parentComments = commentsRepository.findById(request.getParentCommentsId())
                 .orElseThrow(() -> new RuntimeException("상위 댓글이 존재하지 않습니다."));
-            Comments childComments = Comments.of(request.getContent(),request.getNickName(),request.getCreateDate());
+            Comments childComments = Comments.of(request.getContent(),request.getNickName(),request.getCreatedDateTime());
             childComments.mapMembersAndBoardsAndParentComments(userEntity, boards, parentComments);
             return CommentsDTO.convertToDTO(childComments);
         } else {
-            Comments comments = Comments.of(request.getContent(), request.getNickName(), request.getCreateDate());
+            Comments comments = Comments.of(request.getContent(), request.getNickName(), request.getCreatedDateTime());
             comments.mapMembersAndBoards(userEntity, boards);
             commentsRepository.save(comments);
             return CommentsDTO.convertToDTO(comments);

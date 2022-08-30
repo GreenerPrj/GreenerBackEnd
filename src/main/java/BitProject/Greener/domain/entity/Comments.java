@@ -43,14 +43,12 @@ public class Comments extends BaseEntity {
     @Column(nullable = false)
     private String nickName;
 
-    @Column(nullable = false)
-    private LocalDateTime createDate;
 
-    public static Comments of(String content,String nickName, LocalDateTime createDate) {
+    public static Comments of(String content,String nickName, LocalDateTime createDateTime) {
         Comments instance = new Comments();
         instance.content = content;
         instance.nickName = nickName;
-        instance.createDate = createDate;
+        instance.createDateTime();
         return instance;
     }
 

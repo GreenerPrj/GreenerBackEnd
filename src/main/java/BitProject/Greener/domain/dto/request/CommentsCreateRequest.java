@@ -17,5 +17,5 @@ public class CommentsCreateRequest {
 
     private String content;
     private String nickName;
-    private LocalDateTime createDate;
+    private LocalDateTime createdDateTime;
 }

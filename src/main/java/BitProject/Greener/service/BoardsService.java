@@ -215,8 +215,8 @@ public class BoardsService {
 
         Optional<List<Comments>> commentsList = commentsRepository.findByBoardsId(boardsId);
 
-//        comments.get().forEach(Comments -> Comments.getContent());
-
+        commentsList.get().forEach(Comments -> log.info(Comments.getNickName()));
+        commentsList.get().forEach(Comments -> log.info(Comments.getCreatedDateTime()));
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
         // 우선 board는 필수니까 DTO로 변환해주고
@@ -241,7 +241,7 @@ public class BoardsService {
         }).collect(Collectors.toList());
 
         List<LocalDateTime> comments1 = commentsList.get().stream().map(Comments -> {
-            return Comments.getCreateDate();
+            return Comments.getCreatedDateTime();
         }).collect(Collectors.toList());
         List<String> comments2 = commentsList.get().stream().map(Comments -> {
             return Comments.getNickName();
