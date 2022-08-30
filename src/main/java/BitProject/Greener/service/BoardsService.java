@@ -214,7 +214,6 @@ public class BoardsService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
         Optional<List<Comments>> commentsList = commentsRepository.findByBoardsId(boardsId);
-
         commentsList.get().forEach(Comments -> log.info(Comments.getNickName()));
         commentsList.get().forEach(Comments -> log.info(Comments.getCreatedDateTime()));
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음

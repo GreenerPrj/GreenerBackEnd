@@ -8,9 +8,12 @@ import lombok.Getter;
 public class CommentsDTO {
 
     private Long id;
-
+    private Long membersId;
     private Long parentCommentsId;
     private String content;
+    private String nickName;
+
+
 
 
     public static CommentsDTO convertToDTO(Comments comments) {
@@ -20,7 +23,11 @@ public class CommentsDTO {
             Objects.nonNull(comments.getParentComments()) ? comments.getParentComments().getId()
                 : null;
         // comments의 필드에서 content를 가져와야함
+        commentsDTO.membersId =
+                Objects.nonNull(comments.getUserEntity()) ? comments.getUserEntity().getId()
+                         : null;
         commentsDTO.content = comments.getContent();
+        commentsDTO.nickName = comments.getNickName();
         return commentsDTO;
 
     }

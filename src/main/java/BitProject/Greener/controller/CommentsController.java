@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 @RestController
@@ -18,9 +20,10 @@ public class CommentsController {
 
     @PostMapping()
     public ResponseEntity<CommentsDTO> create(
-            @RequestBody CommentsCreateRequest request
-    ) {
-        return ResponseEntity.ok(commentsService.createComments(request));
+            @RequestBody CommentsCreateRequest request, HttpServletRequest request2
+
+            ) {
+        return ResponseEntity.ok(commentsService.createComments(request, request2));
     }
 
     @PutMapping()

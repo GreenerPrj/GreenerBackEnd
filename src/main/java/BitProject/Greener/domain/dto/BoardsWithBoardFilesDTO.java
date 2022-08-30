@@ -15,6 +15,7 @@ import lombok.Setter;
 @Setter
 public class BoardsWithBoardFilesDTO {
     private Long boardsId;
+    private Long membersId;
     private String title;
     private String content;
     private LocalDateTime createDate;
