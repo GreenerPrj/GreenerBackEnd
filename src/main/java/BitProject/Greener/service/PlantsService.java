@@ -129,7 +129,7 @@ public class PlantsService {
 //         기존 이미지 삭제 후 다시 요청온 이미지 저장
 
             try {
-                myPlantsFilesRepository.findByMyPlantsId(id).ifPresent(myPlantsFiles -> {
+                myPlantsFilesRepository.findByMyPlantsId(id).forEach(myPlantsFiles -> {
                     String fullname = absPath + "/" + myPlantsFiles.getFilePath();
                     //현재 게시판에 존재하는 파일객체를 만듬
                     File files = new File(fullname);
