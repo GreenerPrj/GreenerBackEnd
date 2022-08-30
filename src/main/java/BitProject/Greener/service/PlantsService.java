@@ -186,14 +186,23 @@ public class PlantsService {
         String path = "src/main/resources/static/images/myplants";
         try{
 
-            myPlantsFilesRepository.findById(id).ifPresent(myPlantsFiles -> {
-                String fullname = path + myPlantsFiles.getFilePath();
+            myPlantsFilesRepository.findByMyPlantsId(myPlants.getId()).stream().forEach(myPlantsFile -> {
+                String fullname = path + myPlantsFile.getFilePath();
                 File file = new File(fullname);
                 if(file.exists()){
                     file.delete();
                 }
-                myPlantsFilesRepository.delete(myPlantsFiles);
+                myPlantsFilesRepository.delete(myPlantsFile);
             });
+
+//            myPlantsFilesRepository.findById(id).ifPresent(myPlantsFiles -> {
+//                String fullname = path + myPlantsFiles.getFilePath();
+//                File file = new File(fullname);
+//                if(file.exists()){
+//                    file.delete();
+//                }
+//                myPlantsFilesRepository.delete(myPlantsFiles);
+//            });
         }
         catch(Exception e){
 
