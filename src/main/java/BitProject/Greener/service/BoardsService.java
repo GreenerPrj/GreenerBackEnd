@@ -240,7 +240,13 @@ public class BoardsService {
             return Comments.getContent();
         }).collect(Collectors.toList());
 
-        boardsWithBoardFilesDTO.mapComments(comments);
+        List<LocalDateTime> comments1 = commentsList.get().stream().map(Comments -> {
+            return Comments.getCreateDate();
+        }).collect(Collectors.toList());
+        List<String> comments2 = commentsList.get().stream().map(Comments -> {
+            return Comments.getNickName();
+        }).collect(Collectors.toList());
+        boardsWithBoardFilesDTO.mapComments(comments,comments1,comments2);
 
         // 리턴해주면 끝
         return boardsWithBoardFilesDTO;

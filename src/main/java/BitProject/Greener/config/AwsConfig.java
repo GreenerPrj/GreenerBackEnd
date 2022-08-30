@@ -19,7 +19,7 @@ public class AwsConfig {
 
 
     //    @Value("${cloud.aws.credentials.accessKey}")
-    public String accessKey ; // IAM Access Key
+    public String accessKey  ; // IAM Access Key
     //    @Value("${cloud.aws.credentials.secretKey}")
     public String secretKey ; // IAM Secret Key
     //    @Value("${cloud.aws.region.static")

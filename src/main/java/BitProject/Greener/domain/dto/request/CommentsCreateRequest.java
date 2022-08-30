@@ -2,6 +2,8 @@ package BitProject.Greener.domain.dto.request;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class CommentsCreateRequest {
 
@@ -14,4 +16,6 @@ public class CommentsCreateRequest {
     private String title;
 
     private String content;
+    private String nickName;
+    private LocalDateTime createDate;
 }
