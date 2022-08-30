@@ -26,6 +26,7 @@ public class BoardsWithBoardFilesDTO {
     private String img;
     private byte[] img2;
     private Long userId;
+    private Long parentsComments;
 
     private List<String> comment_content;
     private List<String> comment_nickName;
@@ -38,7 +39,6 @@ public class BoardsWithBoardFilesDTO {
         instance.content = boards.getContent();
         instance.createDate = boards.createDateTime();
         instance.nickName = boards.getNickName();
-
         return instance;
     }
 
