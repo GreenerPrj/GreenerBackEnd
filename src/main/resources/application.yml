@@ -37,8 +37,8 @@ SECRET_KEY : hello
 cloud:
   aws:
     credentials:
-      accessKey: AKIASYDPHV6B6BWB3WEF    # AWS IAM AccessKey 적기
-      secretKey: xCYP7RjKwxrqGUOrKloP9Q9MF7nE2Esik92IyKHk  #AWS IAM SecretKey 적기
+      accessKey:     # AWS IAM AccessKey 적기
+      secretKey:  #AWS IAM SecretKey 적기
     s3:
       bucket: cl6-2    # ex) marryting-gyunny
       dir: /image # ex) /gyunny
