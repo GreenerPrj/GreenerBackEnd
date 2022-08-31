@@ -13,5 +13,5 @@ public interface MyPlantsFilesRepository extends JpaRepository<MyPlantsFiles, Lo
 
     Optional<MyPlantsFiles> findByMyPlants(MyPlants myPlants);
 
-    List<MyPlantsFiles> findByMyPlantsId(Long myPlantsId);
+    Optional<MyPlantsFiles> findByMyPlantsId(Long myPlantsId);
 }

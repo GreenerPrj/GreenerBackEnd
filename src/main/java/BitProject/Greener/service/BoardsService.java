@@ -46,7 +46,6 @@ public class BoardsService {
     private final TokenProvider tokenProvider;
     private final BoardFilesRepository boardFilesRepository;
     private final BoardsCategoryRepository boardsCategoryRepository;
-    private final CommentsRepository commentsRepository;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -107,8 +106,7 @@ public class BoardsService {
 
 //
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoardsId(id);
-        log.info(boardFiles == null);
-        log.info(!boardFiles.isPresent());
+
         if (file != null) {
             if (boardFiles.isPresent()) {
                 String bucket_full = bucket + dir + boardFiles.get().getFilePath();

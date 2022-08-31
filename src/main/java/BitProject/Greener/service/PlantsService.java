@@ -1,4 +1,5 @@
 package BitProject.Greener.service;
+
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 
 import BitProject.Greener.domain.dto.MyPlantsWithMyPlantsFilesDTO;
@@ -7,14 +8,19 @@ import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.*;
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,12 +46,15 @@ public class PlantsService {
     private final MyPlantsFilesRepository myPlantsFilesRepository;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
-    private static final String absPath = "src/main/resources/static/images/myPlants";
+    private final AmazonS3Client amazonS3Client;
 
-
+    @Value("${cloud.aws.s3.bucket}")
+    public String bucket;
+    @Value("${cloud.aws.s3.dir}")
+    public String dir;
 
     @Transactional
-    public List<Plants> getplats(){
+    public List<Plants> getplats() {
         return plantsRepository.findAll();
     }
 
@@ -63,7 +72,7 @@ public class PlantsService {
 
 
     @Transactional
-    public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) {
+    public MyPlantsDTO createMyPlants(MyPlantsCreateRequest request, MultipartFile file, HttpServletRequest request2) throws IOException {
         String username = null;
         try {
             String token = tokenProvider.parseBearerToken(request2);
@@ -75,37 +84,28 @@ public class PlantsService {
             Plants plants = plantsRepository.findById(request.getPlantsId())
                     .orElseThrow(() -> new RuntimeException("식물 없음"));
 
-            MyPlants myPlants = MyPlants.of(request.getName(),LocalDateTime.now());
-            myPlants.mapMembersAndPlants(userEntity,plants);
+            MyPlants myPlants = MyPlants.of(request.getName(), LocalDateTime.now());
+            myPlants.mapMembersAndPlants(userEntity, plants);
             myPlantsRepository.save(myPlants);
 
 
             if (file != null) {
+                Long fileSize = file.getSize();
+                InputStream inputStream = file.getInputStream();
                 String originFileName = file.getOriginalFilename();
                 String fileName = UUID.randomUUID().toString();
-                String absPath = "src/main/resources/static/images/";
                 String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String filePath = savePath + "/" + fileName + ".png";
-                String filePath2 = Paths.get(absPath + savePath, fileName + ".png").toString();
-                File saveFile = new File(absPath + savePath);
+                String filePath = "/plant/" + savePath;
 
-                if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
-                    saveFile.mkdir();
-                }
+                ObjectMetadata objMeta = new ObjectMetadata();
+                objMeta.setContentLength(fileSize);
+                String bucket_full = bucket + dir + filePath;
+                amazonS3Client.putObject(bucket_full, fileName, inputStream, objMeta);
 
-                try {
-                    file.transferTo(Paths.get(filePath2)); // 사진저장
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-                log.info(fileName);
-                log.info(originFileName);
-                log.info(filePath);
                 MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
                 // 외래키 등록(연관관계 매핑)
                 myPlantsFiles.mapMyPlants(myPlants);
-
                 // 저장
                 myPlantsFilesRepository.save(myPlantsFiles);
                 // entity를 그대로 내리면 안돼서 DTO로 변환 후 return
@@ -115,87 +115,131 @@ public class PlantsService {
             return MyPlantsDTO.convertToDTO(myPlants);
         }
 
-        }
+    }
 
-        @Transactional
-        public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest, MultipartFile file) {
+    @Transactional
+    public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest, MultipartFile file) throws IOException {
 
-            MyPlants myPlants = myPlantsRepository.findById(id)
-                    .orElseThrow(() -> new
-                            IllegalArgumentException("해당 식물이 존재하지 않습니다."));
+        MyPlants myPlants = myPlantsRepository.findById(id)
+                .orElseThrow(() -> new
+                        IllegalArgumentException("해당 식물이 존재하지 않습니다."));
 
 //         업데이트
-            myPlants.update(myPlantsUpdateRequest.getName(),
-                    myPlantsUpdateRequest.getBornDate());
+        myPlants.update(myPlantsUpdateRequest.getName(),
+                myPlantsUpdateRequest.getBornDate());
 
 //         기존 이미지 삭제 후 다시 요청온 이미지 저장
+        Optional<MyPlantsFiles> myPlantsFiles = myPlantsFilesRepository.findByMyPlantsId(id);
+        if (file != null) {
+            if (myPlantsFiles.isPresent()) {
+                String bucket_full = bucket + dir + myPlantsFiles.get().getFilePath();
+                DeleteObjectRequest request = new DeleteObjectRequest(bucket_full, myPlantsFiles.get().getFileName());
+                amazonS3Client.deleteObject(request);
+                myPlantsFilesRepository.delete(myPlantsFiles.get());
+                String originFileName = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString();
+//                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String savePath2 = myPlantsFiles.get().getFilePath().split("/")[2];
+                String filePath = "/plant/" + savePath2;
 
-            try {
-                myPlantsFilesRepository.findByMyPlantsId(id).forEach(myPlantsFiles -> {
-                    String fullname = absPath + "/" + myPlantsFiles.getFilePath();
-                    //현재 게시판에 존재하는 파일객체를 만듬
-                    File files = new File(fullname);
-
-                    if (file!=null&&!myPlantsFiles.getOriginFileName().equals(file.getOriginalFilename())) { // 파일이 존재하면
-                        files.delete(); // 파일 삭제
-                        myPlantsFilesRepository.delete(myPlantsFiles);
-                    }
-
-
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (file != null) {
-                    String originFileName = file.getOriginalFilename();
-                    String fileName = UUID.randomUUID().toString();
-                    String absPath = "src/main/resources/static/images/";
-                    String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    String filePath = savePath + "/" + fileName + ".png";
-                    String filePath2 = Paths.get(absPath + savePath, fileName + ".png").toString();
-                    File saveFile = new File(absPath + savePath);
-
-                    if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
-                        saveFile.mkdir();
-                    }
-
-                    try {
-                        file.transferTo(Paths.get(filePath2)); // 사진저장
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
-                    myPlantsFiles.mapMyPlants(myPlants);
-                    myPlantsFilesRepository.save(myPlantsFiles);
+                ObjectMetadata objMeta = new ObjectMetadata();
+                objMeta.setContentLength(file.getSize());
+                InputStream inputStream = null;
+                try {
+                    inputStream = file.getInputStream();
+                } catch (IOException e) {
+                    log.info(e);
                 }
+                amazonS3Client.putObject(bucket_full, fileName, inputStream, objMeta);
+
+                MyPlantsFiles myPlantsFiles2 = MyPlantsFiles.of(originFileName, fileName, filePath);
+                myPlantsFiles2.mapMyPlants(myPlants);
+                myPlantsFilesRepository.save(myPlantsFiles2);
 
             }
 
+            else{
+                Long fileSize = file.getSize();
+                InputStream inputStream = file.getInputStream();
+                String originFileName = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString();
+                String savePath2 = myPlants.getCreatedDateTime().toString().split("T")[0];
+
+                String filePath = "/plant/" + savePath2;
+                ObjectMetadata objMeta = new ObjectMetadata();
+                objMeta.setContentLength(fileSize);
+                String bucket_full = bucket + dir + filePath;
+                amazonS3Client.putObject(bucket_full, fileName, inputStream, objMeta);
 
 
-            return id;
+                MyPlantsFiles myPlantsFiles2 = MyPlantsFiles.of(originFileName, fileName, filePath);
+                myPlantsFiles2.mapMyPlants(myPlants);
+                myPlantsFilesRepository.save(myPlantsFiles2);
+            }
+
+
         }
 
 
+//        try {
+//            myPlantsFilesRepository.findByMyPlantsId(id).forEach(myPlantsFiles -> {
+//                String fullname = "/" + myPlantsFiles.getFilePath();
+//                //현재 게시판에 존재하는 파일객체를 만듬
+//                File files = new File(fullname);
+//
+//                if (file != null && !myPlantsFiles.getOriginFileName().equals(file.getOriginalFilename())) { // 파일이 존재하면
+//                    files.delete(); // 파일 삭제
+//                    myPlantsFilesRepository.delete(myPlantsFiles);
+//                }
+//
+//
+//            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (file != null) {
+//                String originFileName = file.getOriginalFilename();
+//                String fileName = UUID.randomUUID().toString();
+//                String absPath = "src/main/resources/static/images/";
+//                String savePath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//                String filePath = savePath + "/" + fileName + ".png";
+//                String filePath2 = Paths.get(absPath + savePath, fileName + ".png").toString();
+//                File saveFile = new File(absPath + savePath);
+//
+//                if (!saveFile.exists()) { //저장 디렉토리가 없으면 생성
+//                    saveFile.mkdir();
+//                }
+//
+//                try {
+//                    file.transferTo(Paths.get(filePath2)); // 사진저장
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                MyPlantsFiles myPlantsFiles = MyPlantsFiles.of(originFileName, fileName, filePath);
+//                myPlantsFiles.mapMyPlants(myPlants);
+//                myPlantsFilesRepository.save(myPlantsFiles);
+//            }
+//
+//        }
 
 
+        return id;
+    }
 
-    public void delete(Long id){
+
+    public void delete(Long id) {
         MyPlants myPlants = myPlantsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 식물이 없습니다."));
 
-        String path = "src/main/resources/static/images/myplants";
-        try{
+        try {
 
             myPlantsFilesRepository.findByMyPlantsId(myPlants.getId()).stream().forEach(myPlantsFile -> {
-                String fullname = path + myPlantsFile.getFilePath();
-                File file = new File(fullname);
-                if(file.exists()){
-                    file.delete();
-                }
+                String bucket_full = bucket + dir + myPlantsFile.getFilePath();
+                DeleteObjectRequest request = new DeleteObjectRequest(bucket_full, myPlantsFile.getFileName());
+                amazonS3Client.deleteObject(request);
                 myPlantsFilesRepository.delete(myPlantsFile);
-            });
+
 
 //            myPlantsFilesRepository.findById(id).ifPresent(myPlantsFiles -> {
 //                String fullname = path + myPlantsFiles.getFilePath();
@@ -204,12 +248,11 @@ public class PlantsService {
 //                    file.delete();
 //                }
 //                myPlantsFilesRepository.delete(myPlantsFiles);
-//            });
-        }
-        catch(Exception e){
+            });
+        } catch (Exception e) {
 
         }
-            myPlantsRepository.delete(myPlants);
+        myPlantsRepository.delete(myPlants);
     }
 
     @Transactional
@@ -219,31 +262,40 @@ public class PlantsService {
         Optional<MyPlantsFiles> myPlantsFiles = myPlantsFilesRepository.findByMyPlants(myPlants);
         MyPlantsWithMyPlantsFilesDTO myPlantsWithMyPlantsFilesDTO = MyPlantsWithMyPlantsFilesDTO.convertToMyPlantsDTO(myPlants);
 
-        String addressPath = "./src/main/resources/static/images/";
-
-        try {
-            InputStream imageStream = new FileInputStream(addressPath + myPlantsFiles.get().getFilePath());
-            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
-            myPlantsWithMyPlantsFilesDTO.setImg("http://localhost:8080/api/v1/boards/" + myPlantsId + "/detail/images");
-            myPlantsWithMyPlantsFilesDTO.setImg2(imageByteArray);
-            myPlantsWithMyPlantsFilesDTO.setUserId(myPlants.getPlants().getId());
-        } catch (Exception e) {
-            myPlantsWithMyPlantsFilesDTO.setUserId(myPlants.getPlants().getId());
+        if (myPlantsFiles.isPresent()) {
+            myPlantsWithMyPlantsFilesDTO.setImg("https://cl6-2.s3.ap-northeast-2.amazonaws.com" + dir + myPlantsFiles.get().getFilePath() + "/" + myPlantsFiles.get().getFileName());
+            // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
+            myPlantsFiles.ifPresent(myPlantsWithMyPlantsFilesDTO::mapMyPlantsFile);
+//        List<String> comments = commentsList.get().stream().map(Comments -> {
+//            return Comments.getContent();
+//        }).collect(Collectors.toList());
+//
+//        boardsWithBoardFilesDTO.mapComments(comments);
         }
+
+//        try {
+//            InputStream imageStream = new FileInputStream(addressPath + myPlantsFiles.get().getFilePath());
+//            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+//            myPlantsWithMyPlantsFilesDTO.setImg("http://localhost:8080/api/v1/boards/" + myPlantsId + "/detail/images");
+//            myPlantsWithMyPlantsFilesDTO.setImg2(imageByteArray);
+//            myPlantsWithMyPlantsFilesDTO.setUserId(myPlants.getPlants().getId());
+//        } catch (Exception e) {
+//            myPlantsWithMyPlantsFilesDTO.setUserId(myPlants.getPlants().getId());
+//        }
 
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         myPlantsFiles.ifPresent(myPlantsWithMyPlantsFilesDTO::mapMyPlantsFile);
         return myPlantsWithMyPlantsFilesDTO;
     }
 
-    public List<MyPlantsDTO> getAllMyPlants(){
-    List<MyPlants> myPlantsList = myPlantsRepository.findAll();
-    List<MyPlantsDTO> myPlantsDTOList = new ArrayList<>();
+    public List<MyPlantsDTO> getAllMyPlants() {
+        List<MyPlants> myPlantsList = myPlantsRepository.findAll();
+        List<MyPlantsDTO> myPlantsDTOList = new ArrayList<>();
 
-    for (MyPlants myPlants : myPlantsList) {
-        myPlantsDTOList.add(MyPlantsDTO.convertToDTO(myPlants));
-    }
-    return myPlantsDTOList;
+        for (MyPlants myPlants : myPlantsList) {
+            myPlantsDTOList.add(MyPlantsDTO.convertToDTO(myPlants));
+        }
+        return myPlantsDTOList;
 
     }
 
@@ -256,6 +308,6 @@ public class PlantsService {
 //
 //
 //        return myPlantsDTO;
-    }
+}
 
 

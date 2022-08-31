@@ -33,7 +33,7 @@ public class MyPlantsController {
     @PostMapping()
     public ResponseEntity<MyPlantsDTO> create(
             @RequestPart(required = false) MultipartFile file,
-            @RequestPart MyPlantsCreateRequest request, HttpServletRequest request2){
+            @RequestPart MyPlantsCreateRequest request, HttpServletRequest request2) throws IOException {
         return ResponseEntity.ok(plantsService.createMyPlants(request,file, request2));
     }
 
@@ -42,7 +42,7 @@ public class MyPlantsController {
                        @RequestPart MyPlantsUpdateRequest myplantsUpdateRequest,
                        @RequestPart(required = false) MultipartFile files
 
-    ) {
+    ) throws IOException {
         return plantsService.update(myPlantsId,myplantsUpdateRequest, files);
     }
 
