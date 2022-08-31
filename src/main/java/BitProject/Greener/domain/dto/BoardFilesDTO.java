@@ -1,6 +1,5 @@
 package BitProject.Greener.domain.dto;
 
-import javax.persistence.Column;
 import lombok.Getter;
 
 @Getter

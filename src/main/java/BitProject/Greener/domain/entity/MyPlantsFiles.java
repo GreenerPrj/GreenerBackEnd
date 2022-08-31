@@ -2,9 +2,7 @@ package BitProject.Greener.domain.entity;
 
 import BitProject.Greener.common.BaseEntity;
 import lombok.Getter;
-
 import javax.persistence.*;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity

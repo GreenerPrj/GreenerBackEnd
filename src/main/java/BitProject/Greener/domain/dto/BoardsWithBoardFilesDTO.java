@@ -3,12 +3,7 @@ package BitProject.Greener.domain.dto;
 
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.function.Consumer;
-
-import BitProject.Greener.domain.entity.Comments;
 import lombok.Getter;
 import lombok.Setter;
 

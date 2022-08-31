@@ -1,9 +1,8 @@
 package BitProject.Greener.domain.dto;
 
-import BitProject.Greener.domain.entity.BoardFiles;
+
 import BitProject.Greener.domain.entity.MyPlants;
 import BitProject.Greener.domain.entity.MyPlantsFiles;
-import BitProject.Greener.domain.entity.Plants;
 import lombok.Getter;
 import lombok.Setter;
 

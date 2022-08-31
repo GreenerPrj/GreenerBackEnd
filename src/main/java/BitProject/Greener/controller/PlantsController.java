@@ -25,7 +25,6 @@ public class PlantsController {
     }
 
 
-
     @GetMapping("/{plants_boardsId}/detail")
     public ResponseEntity<Plants> detail(@PathVariable Long plants_boardsId) throws IOException {
         return ResponseEntity.ok(plantsService.getDetailWithBoardFiles(plants_boardsId));

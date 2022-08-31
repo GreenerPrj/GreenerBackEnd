@@ -23,13 +23,6 @@ public class MyPlantsController {
     private final PlantsService plantsService;
 
 
-
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @PostMapping()
-//    public void create(@Valid @ModelAttribute BoardsDTO boardsDTO){
-//        plantsService.create(getMyPlantsDTO());
-//    }
-
     @PostMapping()
     public ResponseEntity<MyPlantsDTO> create(
             @RequestPart(required = false) MultipartFile file,

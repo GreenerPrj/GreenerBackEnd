@@ -9,8 +9,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 
-
-
 @Data
 @Builder
 public class UserDto {

@@ -1,7 +1,6 @@
 package BitProject.Greener.domain.dto;
 
 import BitProject.Greener.common.BoardsType;
-import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.domain.entity.BoardsCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

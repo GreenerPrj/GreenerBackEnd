@@ -6,34 +6,24 @@ import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.*;
-
 import java.io.*;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.stream.Stream;
-
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 @Service

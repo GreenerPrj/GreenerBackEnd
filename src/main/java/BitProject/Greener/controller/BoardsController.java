@@ -5,7 +5,6 @@ import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.domain.dto.BoardsWithBoardFilesDTO;
 import BitProject.Greener.domain.dto.BoardsWithUserDTO;
 import BitProject.Greener.domain.dto.BoardsDTO;
-import BitProject.Greener.domain.entity.Boards;
 import BitProject.Greener.service.BoardsService;
 import BitProject.Greener.domain.dto.request.BoardsCreateRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
@@ -46,8 +44,6 @@ public class BoardsController{
     }
 
 
-
-
     @DeleteMapping("/{boardsId}")
     public ResponseEntity<?> delete(@PathVariable Long boardsId){
         boardsService.delete(boardsId);
@@ -62,27 +58,9 @@ public class BoardsController{
     }
 
 
-
-
-
-
-
     @GetMapping("/{boardsId}/detail")
     public ResponseEntity<BoardsWithBoardFilesDTO> detail(@PathVariable Long boardsId) throws IOException {
         return ResponseEntity.ok(boardsService.getDetailWithBoardFiles(boardsId));
     }
-
-//    @GetMapping(value = "/{boardsId}/detail/images", produces = MediaType.IMAGE_PNG_VALUE)
-//    public ResponseEntity<byte[]> showImage(@PathVariable Long boardsId) throws IOException {
-//        BoardsWithBoardFilesDTO imageByteArray = boardsService.getDetailWithBoardFiles(boardsId);
-//        return new ResponseEntity<byte[]>(imageByteArray.getImg2(), HttpStatus.OK);
-//    }
-
-//    @GetMapping("/boardscategory/")
-//    public ResponseEntity<List<BoardsCategoryDTO>> getBoardsCategoryDTO(){
-//        return ResponseEntity.ok(boardsService.boardsCategoryList());
-//
-//    }
-
 
 }

@@ -6,7 +6,7 @@ plugins {
 
 group = 'BitProject'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = "1.9"
 
 configurations {
 	compileOnly {
@@ -28,19 +28,11 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	// https://mvnrepository.com/artifact/commons-io/commons-io
 	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-
-
-	//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-//	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.260'
-
-//	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.260'
-//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation 'com.amazonaws:aws-java-sdk:1.11.404'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+//	implementation 'com.amazonaws:aws-java-sdk:1.11.404'
 
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -51,3 +43,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_1_9

@@ -1,10 +1,8 @@
 package BitProject.Greener.domain.dto;
 
-import BitProject.Greener.common.BaseEntity;
+
 import BitProject.Greener.domain.entity.MyPlants;
-
 import java.time.LocalDateTime;
-
 import lombok.Getter;
 
 @Getter

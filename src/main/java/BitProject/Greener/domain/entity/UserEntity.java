@@ -1,11 +1,9 @@
 package BitProject.Greener.domain.entity;
 
 import static javax.persistence.GenerationType.IDENTITY;
-
 import BitProject.Greener.common.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.*;
-
 import BitProject.Greener.common.RoleType;
 import BitProject.Greener.domain.dto.UserDto;
 import lombok.AllArgsConstructor;

@@ -9,14 +9,12 @@ import BitProject.Greener.repository.BoardsRepository;
 import BitProject.Greener.repository.CommentsRepository;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.UserRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Service

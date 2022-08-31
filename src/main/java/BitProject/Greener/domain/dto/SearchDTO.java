@@ -2,7 +2,6 @@ package BitProject.Greener.domain.dto;
 
 import lombok.Builder;
 import lombok.Data;
-
 import java.beans.ConstructorProperties;
 
 @Builder
