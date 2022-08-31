@@ -12,4 +12,6 @@ public interface MyPlantsRepository extends JpaRepository<MyPlants, Long> {
     @Query("select m from MyPlants m join fetch m.userEntity where m.userEntity.id = :userId")
     List<MyPlants> getMyPlantsByUserId(Long userId);
 
+
+
 }

@@ -1,6 +1,7 @@
 package BitProject.Greener.service;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 
+import BitProject.Greener.domain.dto.MyPlantsWithMyPlantsFilesDTO;
 import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.*;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -210,6 +212,30 @@ public class PlantsService {
             myPlantsRepository.delete(myPlants);
     }
 
+    @Transactional
+    public MyPlantsWithMyPlantsFilesDTO getDetailWithMyPlantsFiles(Long myPlantsId) throws IOException {
+        MyPlants myPlants = myPlantsRepository.findById(myPlantsId)
+                .orElseThrow(() -> new IllegalArgumentException("내 식물이 존재하지 않습니다."));
+        Optional<MyPlantsFiles> myPlantsFiles = myPlantsFilesRepository.findByMyPlants(myPlants);
+        MyPlantsWithMyPlantsFilesDTO myPlantsWithMyPlantsFilesDTO = MyPlantsWithMyPlantsFilesDTO.convertToMyPlantsDTO(myPlants);
+
+        String addressPath = "./src/main/resources/static/images/";
+
+        try {
+            InputStream imageStream = new FileInputStream(addressPath + myPlantsFiles.get().getFilePath());
+            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+            myPlantsWithMyPlantsFilesDTO.setImg("http://localhost:8080/api/v1/boards/" + myPlantsId + "/detail/images");
+            myPlantsWithMyPlantsFilesDTO.setImg2(imageByteArray);
+            myPlantsWithMyPlantsFilesDTO.setUserId(myPlants.getPlants().getId());
+        } catch (Exception e) {
+            myPlantsWithMyPlantsFilesDTO.setUserId(myPlants.getPlants().getId());
+        }
+
+        // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
+        myPlantsFiles.ifPresent(myPlantsWithMyPlantsFilesDTO::mapMyPlantsFile);
+        return myPlantsWithMyPlantsFilesDTO;
+    }
+
     public List<MyPlantsDTO> getAllMyPlants(){
     List<MyPlants> myPlantsList = myPlantsRepository.findAll();
     List<MyPlantsDTO> myPlantsDTOList = new ArrayList<>();
@@ -222,14 +248,14 @@ public class PlantsService {
     }
 
 
-    public MyPlantsDTO getDetailWithMyPlants(Long myplantsId){
-
-        MyPlants myPlants = myPlantsRepository.findById(myplantsId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 내 식물이 존재하지 않습니다."));
-        MyPlantsDTO myPlantsDTO = MyPlantsDTO.convertToDTO(myPlants);
-
-
-        return myPlantsDTO;
+//    public MyPlantsDTO getDetailWithMyPlants(Long myplantsId){
+//
+//        MyPlants myPlants = myPlantsRepository.findById(myplantsId)
+//                .orElseThrow(() -> new IllegalArgumentException("등록된 내 식물이 존재하지 않습니다."));
+//        MyPlantsDTO myPlantsDTO = MyPlantsDTO.convertToDTO(myPlants);
+//
+//
+//        return myPlantsDTO;
     }
 
-}
+

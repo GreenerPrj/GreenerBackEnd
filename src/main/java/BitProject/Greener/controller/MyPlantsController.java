@@ -5,7 +5,7 @@ import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 
 
-
+import BitProject.Greener.domain.dto.MyPlantsWithMyPlantsFilesDTO;
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.service.PlantsService;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/v1/my-plants")
@@ -61,10 +62,10 @@ public class MyPlantsController {
     }
 
     @GetMapping("/{myPlantsId}/detail")
-    public ResponseEntity<MyPlantsDTO> detail(
+    public ResponseEntity<MyPlantsWithMyPlantsFilesDTO> detail(
             @PathVariable Long myPlantsId
-    ){
-        return ResponseEntity.ok(plantsService.getDetailWithMyPlants(myPlantsId));
+    ) throws IOException {
+        return ResponseEntity.ok(plantsService.getDetailWithMyPlantsFiles(myPlantsId));
     }
 
 }

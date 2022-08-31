@@ -19,9 +19,9 @@ public class AwsConfig {
 
 
     //    @Value("${cloud.aws.credentials.accessKey}")
-    public String accessKey ="AKIASYDPHV6B6BWB3WEF" ; // IAM Access Key
+    public String accessKey ; // IAM Access Key
     //    @Value("${cloud.aws.credentials.secretKey}")
-    public String secretKey = "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"; // IAM Secret Key
+    public String secretKey; // IAM Secret Key
     //    @Value("${cloud.aws.region.static")
 
     public String region = "ap-northeast-2"; // Bucket Region
