@@ -26,6 +26,7 @@ spring:
 #  level:
 #    org.springframework.orm.jpa: DEBUG
 
+
 server:
   servlet:
     context-path: /

@@ -1,15 +1,11 @@
 package BitProject.Greener.service;
 
-
-
-
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -30,9 +26,9 @@ public class S3service {
 
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentLength(fileSize);
+        String bucket_full = bucket + dir;
+        amazonS3Client.putObject(bucket_full, s3FileName, inputStream, objMeta);
 
-        amazonS3Client.putObject(bucket, s3FileName, inputStream, objMeta);
-
-        return amazonS3Client.getUrl(bucket, dir + s3FileName).toString();
+        return amazonS3Client.getUrl(bucket_full, dir + s3FileName).toString();
     }
 }
