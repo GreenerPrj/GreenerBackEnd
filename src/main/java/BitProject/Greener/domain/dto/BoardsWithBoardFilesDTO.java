@@ -26,11 +26,10 @@ public class BoardsWithBoardFilesDTO {
     private String img;
     private byte[] img2;
     private Long userId;
-    private Long parentsComments;
 
-    private List<String> comment_content;
-    private List<String> comment_nickName;
-    private List<LocalDateTime> comment_createDateTime;
+//    private List<String> comment_content;
+//    private List<String> comment_nickName;
+//    private List<LocalDateTime> comment_createDateTime;
 
     public static BoardsWithBoardFilesDTO convertToBoardDTO(Boards boards){
         BoardsWithBoardFilesDTO instance = new BoardsWithBoardFilesDTO();
@@ -51,10 +50,10 @@ public class BoardsWithBoardFilesDTO {
 
 
 
-    public void mapComments(List<String> comments, List<LocalDateTime> comments1, List<String> comments2) {
-        this.comment_content = comments;
-        this.comment_createDateTime = comments1;
-        this.comment_nickName = comments2;
-    }
+//    public void mapComments(List<String> comments, List<LocalDateTime> comments1, List<String> comments2) {
+//        this.comment_content = comments;
+//        this.comment_createDateTime = comments1;
+//        this.comment_nickName = comments2;
+//    }
 
 }

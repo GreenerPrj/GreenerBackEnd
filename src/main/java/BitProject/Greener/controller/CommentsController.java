@@ -4,12 +4,14 @@ package BitProject.Greener.controller;
 import BitProject.Greener.controller.request.CommentsUpdateRequest;
 import BitProject.Greener.domain.dto.CommentsDTO;
 import BitProject.Greener.domain.dto.request.CommentsCreateRequest;
+import BitProject.Greener.domain.entity.Comments;
 import BitProject.Greener.service.CommentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
@@ -35,5 +37,12 @@ public class CommentsController {
     public void delete(@PathVariable Long id){
         commentsService.delete(id);
     }
+
+    @GetMapping("/{boardsid}/detail")
+    public ResponseEntity<List<CommentsDTO>> getCommentsDTO(){
+        return ResponseEntity.ok(commentsService.getAllComments());
+    }
+
+
 
 }

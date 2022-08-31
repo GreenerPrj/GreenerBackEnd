@@ -213,9 +213,9 @@ public class BoardsService {
         Boards boards = boardsRepository.findById(boardsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
-        Optional<List<Comments>> commentsList = commentsRepository.findByBoardsId(boardsId);
-        commentsList.get().forEach(Comments -> log.info(Comments.getNickName()));
-        commentsList.get().forEach(Comments -> log.info(Comments.getCreatedDateTime()));
+//        Optional<List<Comments>> commentsList = commentsRepository.findByBoardsId(boardsId);
+//        commentsList.get().forEach(Comments -> log.info(Comments.getNickName()));
+//        commentsList.get().forEach(Comments -> log.info(Comments.getCreatedDateTime()));
         // 첨부파일은 있을수도 없을수도 있어서 optional로 받았음
         Optional<BoardFiles> boardFiles = boardFilesRepository.findByBoards(boards);
         // 우선 board는 필수니까 DTO로 변환해주고
@@ -235,17 +235,17 @@ public class BoardsService {
 
         // 파일이 있으면 변환한 DTO에 파일 정보도 세팅해서
         boardFiles.ifPresent(boardsWithBoardFilesDTO::mapBoardsFile);
-        List<String> comments = commentsList.get().stream().map(Comments -> {
-            return Comments.getContent();
-        }).collect(Collectors.toList());
-
-        List<LocalDateTime> comments1 = commentsList.get().stream().map(Comments -> {
-            return Comments.getCreatedDateTime();
-        }).collect(Collectors.toList());
-        List<String> comments2 = commentsList.get().stream().map(Comments -> {
-            return Comments.getNickName();
-        }).collect(Collectors.toList());
-        boardsWithBoardFilesDTO.mapComments(comments,comments1,comments2);
+//        List<String> comments = commentsList.get().stream().map(Comments -> {
+//            return Comments.getContent();
+//        }).collect(Collectors.toList());
+//
+//        List<LocalDateTime> comments1 = commentsList.get().stream().map(Comments -> {
+//            return Comments.getCreatedDateTime();
+//        }).collect(Collectors.toList());
+//        List<String> comments2 = commentsList.get().stream().map(Comments -> {
+//            return Comments.getNickName();
+//        }).collect(Collectors.toList());
+//        boardsWithBoardFilesDTO.mapComments(comments,comments1,comments2);
 
         // 리턴해주면 끝
         return boardsWithBoardFilesDTO;

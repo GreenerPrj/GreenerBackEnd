@@ -9,6 +9,9 @@ import BitProject.Greener.repository.BoardsRepository;
 import BitProject.Greener.repository.CommentsRepository;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,5 +62,15 @@ public class CommentsService {
             .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
         commentsRepository.delete(comments);
+    }
+
+    public List<CommentsDTO> getAllComments() {
+        List<Comments> commentsList = commentsRepository.findAll();
+        List<CommentsDTO> commentsDTOList = new ArrayList<>();
+
+        for (Comments comments : commentsList) {
+            commentsDTOList.add(CommentsDTO.convertToDTO(comments));
+        }
+        return commentsDTOList;
     }
 }
