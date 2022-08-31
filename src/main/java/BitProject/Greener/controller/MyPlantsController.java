@@ -45,10 +45,10 @@ public class MyPlantsController {
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<MyPlantsDTO>> getMyPlantsDTO(){
-        return ResponseEntity.ok(plantsService.getAllMyPlants());
-    }
+//    @GetMapping()
+//    public ResponseEntity<List<MyPlantsDTO>> getMyPlantsDTO(){
+//        return ResponseEntity.ok(plantsService.getAllMyPlants());
+//    }
 
     @GetMapping("/{myPlantsId}/detail")
     public ResponseEntity<MyPlantsWithMyPlantsFilesDTO> detail(

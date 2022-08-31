@@ -209,12 +209,25 @@ public class PlantsService {
         return myPlantsWithMyPlantsFilesDTO;
     }
 
-    public List<MyPlantsDTO> getAllMyPlants() {
-        List<MyPlants> myPlantsList = myPlantsRepository.findAll();
+
+
+
+    public List<MyPlantsDTO> getAllMyPlants(Long userId) {
+        String url = null;
+
+        List<MyPlants> myPlantsList = myPlantsRepository.getMyPlantsByUserId(userId);
         List<MyPlantsDTO> myPlantsDTOList = new ArrayList<>();
 
         for (MyPlants myPlants : myPlantsList) {
-            myPlantsDTOList.add(MyPlantsDTO.convertToDTO(myPlants));
+            MyPlants myPlants2 = myPlantsRepository.findById(myPlants.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("내 식물이 존재하지 않습니다."));
+            Optional<MyPlantsFiles> myPlantsFiles = myPlantsFilesRepository.findByMyPlants(myPlants2);
+
+            if (myPlantsFiles.isPresent()) {
+                url = "https://cl6-2.s3.ap-northeast-2.amazonaws.com" + dir + myPlantsFiles.get().getFilePath() + "/" + myPlantsFiles.get().getFileName();
+            }
+
+            myPlantsDTOList.add(MyPlantsDTO.convertToDTO2(myPlants, url));
         }
         return myPlantsDTOList;
 

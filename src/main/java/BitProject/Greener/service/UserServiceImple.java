@@ -2,15 +2,12 @@ package BitProject.Greener.service;
 
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.domain.dto.UserDto;
-import BitProject.Greener.domain.entity.MyPlants;
 import BitProject.Greener.domain.entity.TokenEntity;
 import BitProject.Greener.domain.entity.UserEntity;
 import BitProject.Greener.jwt.TokenProvider;
-import BitProject.Greener.repository.MyPlantsRepository;
 import BitProject.Greener.repository.TokenRespository;
 import BitProject.Greener.repository.UserRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,8 +24,7 @@ public class UserServiceImple implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final TokenRespository tokenRespository;
-    private final MyPlantsRepository myPlantsRepository;
-
+    private final PlantsService plantsService;
 
     @Transactional
     public Long create(@Valid UserDto userDto ) {
@@ -75,8 +71,7 @@ public class UserServiceImple implements UserService {
 
     @Override
     public List<MyPlantsDTO> getMyPlants(Long userId) {
-        List<MyPlants> myPlants = myPlantsRepository.getMyPlantsByUserId(userId);
-        log.info(myPlants.size());
-        return myPlants.stream().map(MyPlantsDTO::convertToDTO).collect(Collectors.toList());
+
+        return plantsService.getAllMyPlants(userId);
     }
 }
