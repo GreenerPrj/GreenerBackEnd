@@ -1,11 +1,7 @@
 package BitProject.Greener.controller;
 
 
-import BitProject.Greener.controller.request.BoardsUpdateRequest;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
-
-
-
 import BitProject.Greener.domain.dto.request.MyPlantsCreateRequest;
 import BitProject.Greener.domain.dto.MyPlantsDTO;
 import BitProject.Greener.service.PlantsService;
@@ -14,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

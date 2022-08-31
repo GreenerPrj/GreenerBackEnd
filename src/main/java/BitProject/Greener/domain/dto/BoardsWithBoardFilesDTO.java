@@ -4,6 +4,7 @@ package BitProject.Greener.domain.dto;
 import BitProject.Greener.domain.entity.BoardFiles;
 import BitProject.Greener.domain.entity.Boards;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -17,7 +18,7 @@ public class BoardsWithBoardFilesDTO {
     private Long boardsId;
     private String title;
     private String content;
-    private LocalDateTime createDate;
+    private String createDate;
     private Long boardFilesId;
     private String fileName;
     private String filePath;
@@ -33,7 +34,7 @@ public class BoardsWithBoardFilesDTO {
         instance.boardsId = boards.getId();
         instance.title = boards.getTitle();
         instance.content = boards.getContent();
-        instance.createDate = boards.createDateTime();
+        instance.createDate = boards.createDateTime().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
         instance.nickName = boards.getNickName();
 
         return instance;
