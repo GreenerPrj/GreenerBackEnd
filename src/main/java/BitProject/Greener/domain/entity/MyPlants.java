@@ -9,12 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import BitProject.Greener.common.BaseEntity;
 import lombok.Getter;
 
 
 @Entity
 @Getter
-public class MyPlants{
+public class MyPlants extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     @Id
     private Long id;

@@ -31,8 +31,10 @@ public class MyPlantsWithMyPlantsFilesDTO {
         MyPlantsWithMyPlantsFilesDTO instance = new MyPlantsWithMyPlantsFilesDTO();
         instance.myPlantsId = myPlants.getId();
         instance.name = myPlants.getName();
+        instance.createDate = myPlants.createDateTime();
         instance.plantsId =
                 Objects.nonNull(myPlants.getPlants()) ? myPlants.getPlants().getId() : null;
+
 
         return instance;
 
