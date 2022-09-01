@@ -29,6 +29,7 @@ public class MyPlantsDTO{
         MyPlantsDTO myPlantsDTO = new MyPlantsDTO();
         myPlantsDTO.id = myPlants.getId();
         myPlantsDTO.name = myPlants.getName();
+        myPlantsDTO.bornDate = myPlants.getBornDate();
         myPlantsDTO.bornDate2 = myPlants.getBornDate().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));;
         myPlantsDTO.img = url;
         return myPlantsDTO;

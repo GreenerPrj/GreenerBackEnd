@@ -1,7 +1,9 @@
 package BitProject.Greener.service;
 
+import BitProject.Greener.common.RoleType;
 import BitProject.Greener.controller.request.MyPlantsUpdateRequest;
 import BitProject.Greener.domain.dto.MyPlantsWithMyPlantsFilesDTO;
+import BitProject.Greener.domain.dto.UserDto;
 import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
 import BitProject.Greener.repository.*;
@@ -11,6 +13,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -110,6 +113,7 @@ public class PlantsService {
     }
 
     @Transactional
+    @Builder
     public Long update(Long id, MyPlantsUpdateRequest myPlantsUpdateRequest, MultipartFile file) throws IOException {
 
         MyPlants myPlants = myPlantsRepository.findById(id)
@@ -119,6 +123,11 @@ public class PlantsService {
 //         업데이트
         myPlants.update(myPlantsUpdateRequest.getName(),
                 myPlantsUpdateRequest.getBornDate());
+
+//        MyPlantsUpdateRequest request2 = MyPlantsUpdateRequest.builder()
+//                .name(myPlantsUpdateRequest.getName())
+//                .bornDate2(myPlantsUpdateRequest.getBornDate2())
+//                .build();
 
 //         기존 이미지 삭제 후 다시 요청온 이미지 저장
         Optional<MyPlantsFiles> myPlantsFiles = myPlantsFilesRepository.findByMyPlantsId(id);
@@ -227,8 +236,12 @@ public class PlantsService {
             if (myPlantsFiles.isPresent()) {
                 url = "https://cl6-2.s3.ap-northeast-2.amazonaws.com" + dir + myPlantsFiles.get().getFilePath() + "/" + myPlantsFiles.get().getFileName();
             }
-            
-            myPlantsDTOList.add(MyPlantsDTO.convertToDTO2(myPlants, url));
+            myPlants2.setBornDate(myPlants.getCreatedDateTime());
+            log.info(myPlants.getBornDate());
+            log.info(myPlants.getCreatedDateTime());
+            log.info(myPlants2.getBornDate());
+            log.info(myPlants2.getCreatedDateTime());
+            myPlantsDTOList.add(MyPlantsDTO.convertToDTO2(myPlants2, url));
         }
         return myPlantsDTOList;
 

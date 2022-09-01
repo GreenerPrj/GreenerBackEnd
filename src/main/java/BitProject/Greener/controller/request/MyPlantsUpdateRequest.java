@@ -13,6 +13,7 @@ public class MyPlantsUpdateRequest {
     private String name;
     private LocalDateTime bornDate;
 
+
     @Builder
     public MyPlantsUpdateRequest(String name, LocalDateTime bornDate) {
         this.name = name;
