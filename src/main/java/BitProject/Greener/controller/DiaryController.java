@@ -2,6 +2,7 @@ package BitProject.Greener.controller;
 
 import BitProject.Greener.controller.request.DiaryUpdateRequest;
 import BitProject.Greener.domain.dto.DiaryDTO;
+import BitProject.Greener.domain.dto.DiaryWithDiaryFilesDTO;
 import BitProject.Greener.domain.dto.request.DiaryCreateRequest;
 import BitProject.Greener.service.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
 import java.io.IOException;
+import java.util.List;
 
 @RequestMapping("/api/v1/diary")
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ import java.io.IOException;
 public class DiaryController {
 
     private final DiaryService diaryService;
+
 
     @PostMapping()
     public ResponseEntity<DiaryDTO> create(
@@ -40,6 +43,13 @@ public class DiaryController {
     public ResponseEntity<?> delete(@PathVariable Long diaryId) {
         diaryService.delete(diaryId);
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{diaryId}/detail")
+    public ResponseEntity<DiaryWithDiaryFilesDTO> detail(
+            @PathVariable Long diaryId
+    )throws IOException{
+        return ResponseEntity.ok(diaryService.getDetailWithDiaryFiles(diaryId));
     }
 
 }

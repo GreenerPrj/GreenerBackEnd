@@ -3,6 +3,7 @@ package BitProject.Greener.service;
 import BitProject.Greener.controller.request.DiaryUpdateRequest;
 import BitProject.Greener.domain.dto.BoardsDTO;
 import BitProject.Greener.domain.dto.DiaryDTO;
+import BitProject.Greener.domain.dto.DiaryWithDiaryFilesDTO;
 import BitProject.Greener.domain.dto.request.DiaryCreateRequest;
 import BitProject.Greener.domain.entity.*;
 import BitProject.Greener.jwt.TokenProvider;
@@ -169,6 +170,21 @@ public class DiaryService {
         diaryRepository.delete(diary);
     }
 
+    @Transactional
+    public DiaryWithDiaryFilesDTO getDetailWithDiaryFiles(Long diaryId) throws IOException{
+
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 다이어리가 존재하지 않습니다."));
+
+        Optional<DiaryFiles> diaryFiles = diaryFilesRepository.findByDiary(diary);
+        DiaryWithDiaryFilesDTO diaryWithDiaryFilesDTO = DiaryWithDiaryFilesDTO.convertToDiaryDTO(diary);
+        if (diaryFiles.isPresent()) {
+            diaryWithDiaryFilesDTO.setImg("https://cl6-2.s3.ap-northeast-2.amazonaws.com" + dir + diaryFiles.get().getFilePath() + "/" + diaryFiles.get().getFileName());
+            diaryFiles.ifPresent(diaryWithDiaryFilesDTO::mapDiaryFile);
+        }
+//        diaryWithDiaryFilesDTO.setDiaryId(diary.getMyPlants().getId());
+        return diaryWithDiaryFilesDTO;
+    }
 
 
 }
