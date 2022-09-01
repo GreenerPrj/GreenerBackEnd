@@ -20,9 +20,7 @@ public class CommentsController {
 
     @PostMapping()
     public ResponseEntity<CommentsDTO> create(
-            @RequestBody CommentsCreateRequest request, HttpServletRequest request2
-
-            ) {
+            @RequestBody CommentsCreateRequest request, HttpServletRequest request2) {
         return ResponseEntity.ok(commentsService.createComments(request, request2));
     }
 

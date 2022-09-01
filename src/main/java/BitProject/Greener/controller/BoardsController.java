@@ -34,6 +34,8 @@ public class BoardsController{
             @RequestPart BoardsCreateRequest request, HttpServletRequest request2) throws IOException {
         return ResponseEntity.ok(boardsService.createBoards(request, file, request2));
     }
+
+
     @PutMapping("/{boardsId}")
     public Long update(@PathVariable Long boardsId,
                          @RequestPart BoardsUpdateRequest boardsUpdateRequest,

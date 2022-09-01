@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface BoardFilesRepository extends JpaRepository<BoardFiles, Long> {
     Optional<BoardFiles> findByBoards(Boards boards);
 
-    Optional<BoardFiles> findByBoardsId(Long id );
+    Optional<BoardFiles> findByBoardsId(Long id);
 
 
 
