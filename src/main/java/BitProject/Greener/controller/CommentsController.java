@@ -37,8 +37,8 @@ public class CommentsController {
     }
 
     @GetMapping("/{boardsid}/detail")
-    public ResponseEntity<List<CommentsDTO>> getCommentsDTO(){
-        return ResponseEntity.ok(commentsService.getAllComments());
+    public ResponseEntity<List<CommentsDTO>> getCommentsDTO(@PathVariable Long boardsid){
+        return ResponseEntity.ok(commentsService.getAllComments(boardsid));
     }
 
 

@@ -12,6 +12,8 @@ import BitProject.Greener.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,8 +64,8 @@ public class CommentsService {
         commentsRepository.delete(comments);
     }
 
-    public List<CommentsDTO> getAllComments() {
-        List<Comments> commentsList = commentsRepository.findAll();
+    public List<CommentsDTO> getAllComments(Long boardsid) {
+        List<Comments> commentsList = commentsRepository.findByBoardsId(boardsid);
         List<CommentsDTO> commentsDTOList = new ArrayList<>();
 
         for (Comments comments : commentsList) {

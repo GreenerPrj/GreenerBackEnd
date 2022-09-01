@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface CommentsRepository extends JpaRepository<Comments, Long> {
-    Optional<List<Comments>> findByBoardsId(Long id);
+    List<Comments> findByBoardsId(Long id);
 
 
 }
