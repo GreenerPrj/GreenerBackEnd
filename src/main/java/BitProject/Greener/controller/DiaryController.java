@@ -52,4 +52,10 @@ public class DiaryController {
         return ResponseEntity.ok(diaryService.getDetailWithDiaryFiles(diaryId));
     }
 
+    @GetMapping("/{myPlantsId}/diary")
+    public ResponseEntity<List<DiaryDTO>> getDiaryDTO(@PathVariable Long myPlantsId) {
+        return ResponseEntity.ok(diaryService.getAllDiary(myPlantsId));
+
+    }
+
 }

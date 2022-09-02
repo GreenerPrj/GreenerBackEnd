@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -186,6 +188,22 @@ public class DiaryService {
         return diaryWithDiaryFilesDTO;
     }
 
+    public List<DiaryDTO> getAllDiary(Long myPlantsId) {
+        List<Diary> diaryList = diaryRepository.findByMyPlantsId(myPlantsId);
+        List<DiaryDTO> diaryDTOList = new ArrayList<>();
+
+        for (Diary diary : diaryList) {
+            String url = null;
+            Diary diary2 = diaryRepository.findById(diary.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("내 다이어리가 존재하지 않습니다."));
+            Optional<DiaryFiles> diaryFiles = diaryFilesRepository.findByDiary(diary2);
+            if (diaryFiles.isPresent()) {
+                url = "https://cl6-2.s3.ap-northeast-2.amazonaws.com" + dir + diaryFiles.get().getFilePath() + "/" + diaryFiles.get().getFileName();
+            }
+            diaryDTOList.add(DiaryDTO.convertToDTO2(diary,url));
+        }
+        return diaryDTOList;
+    }
 
 }
 

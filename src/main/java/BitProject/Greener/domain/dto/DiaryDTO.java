@@ -14,6 +14,7 @@ public class DiaryDTO {
     private Long membersId;
     private String content;
     private LocalDateTime createDateTime;
+    private String img;
 
     public static DiaryDTO convertToDTO(Diary diary) {
         DiaryDTO diaryDTO = new DiaryDTO();
@@ -25,6 +26,13 @@ public class DiaryDTO {
                 Objects.nonNull(diary.getMyPlants()) ? diary.getMyPlants().getId()
                         :null;
         diaryDTO.content = diary.getContent();
+        diaryDTO.createDateTime = diary.createDateTime();
+        return diaryDTO;
+    }
+    public static  DiaryDTO convertToDTO2(Diary diary,String url) {
+        DiaryDTO diaryDTO = new DiaryDTO();
+        diaryDTO.id = diary.getId();
+        diaryDTO.img = url;
         diaryDTO.createDateTime = diary.createDateTime();
         return diaryDTO;
     }

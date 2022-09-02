@@ -29,6 +29,8 @@ public class Diary extends BaseEntity {
 
     @Column(nullable = false)
     private String content;
+    @Column(nullable = true)
+    private LocalDateTime createDateTime;
 
     public static Diary of(String content, LocalDateTime createDateTime) {
         Diary instance = new Diary();
