@@ -31,6 +31,7 @@ public class DiaryDTO {
     }
     public static  DiaryDTO convertToDTO2(Diary diary,String url) {
         DiaryDTO diaryDTO = new DiaryDTO();
+        diaryDTO.content = diary.getContent();
         diaryDTO.id = diary.getId();
         diaryDTO.img = url;
         diaryDTO.createDateTime = diary.createDateTime();
