@@ -37,6 +37,7 @@ public class CommentsService {
                 .orElseThrow(() -> new RuntimeException("상위 댓글이 존재하지 않습니다."));
             Comments childComments = Comments.of(request.getContent(),userEntity.getNickName(),request.getCreatedDateTime());
             childComments.mapMembersAndBoardsAndParentComments(userEntity, boards, parentComments, childComments);
+            commentsRepository.save(childComments);
             return CommentsDTO.convertToDTO(childComments);
         } else {
             Comments comments = Comments.of(request.getContent(), userEntity.getNickName(), request.getCreatedDateTime());
