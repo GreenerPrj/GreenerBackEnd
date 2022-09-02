@@ -17,6 +17,7 @@ public class DiaryWithDiaryFilesDTO {
     private String createDate;
     private Long diaryFilesId;
     private String fileName;
+    private Long myPlantsId;
     private String filePath;
     private String img;
     private byte[] img2;
@@ -26,6 +27,7 @@ public class DiaryWithDiaryFilesDTO {
         instance.diaryId = diary.getId();
         instance.content = diary.getContent();
         instance.createDate = diary.createDateTime().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
+        instance.myPlantsId = diary.getMyPlants().getId();
         return instance;
     }
     public void mapDiaryFile(DiaryFiles diaryFiles){
