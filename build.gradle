@@ -33,8 +33,8 @@ dependencies {
 	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 	implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.6.3'
 	dependencies { implementation 'com.google.code.gson:gson:2.8.7' }
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-//	implementation 'com.amazonaws:aws-java-sdk:1.11.404'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'com.amazonaws:aws-java-sdk:1.11.404'
 
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'

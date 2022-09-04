@@ -23,34 +23,20 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = false,unique = true)
     private String email;
-
-    @Column(nullable = false)
     private String password;
-
-//    @Column(nullable = false)
-    private String address;
-
-//    @Column(nullable = false)
-    private String detailAddress;
-
-//    @Column(nullable = false)
-    private LocalDateTime birthday;
-
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String nickName;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+
+
     public UserDto toEntity(){
         UserDto userEntity = UserDto.builder()
                 .id(id)
-                .name(name)
                 .nickName(nickName)
                 .email(email)
                 .role(RoleType.USER)

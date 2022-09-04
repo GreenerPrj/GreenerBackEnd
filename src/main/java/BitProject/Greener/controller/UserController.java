@@ -32,7 +32,7 @@ public class UserController {
             UserDto responseuserdto = UserDto.builder()
                     .email(userDto.getEmail())
                     .id(userDto.getId())
-                    .name(userDto.getName())
+                    .nickName(userDto.getNickName())
                     .build();
             return ResponseEntity.ok().body(responseuserdto);
         }
@@ -46,7 +46,7 @@ public class UserController {
         UserEntity user = userService.getByCredentials(userDto.getEmail(),userDto.getPassword()); //id, pw check
 
         if(user!=null){
-            String a = userService.tokenstore(user,response);
+            userService.tokenstore(user,response);
             return ResponseEntity.ok().body("login succes");
         }
         else{
