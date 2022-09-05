@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests() // /와 /board/**경로는 인증 안해도 됨.
-                .antMatchers("/","/auth/signup","/auth/login","/api/v1/boards/**","/oauth/**","/kauth.kakao.com/**").permitAll()
+                .antMatchers("/","/auth/signup","/auth/login","/api/v1/boards/**","/oauth/**","/user").permitAll()
 //                .antMatchers("**").permitAll()
                 .anyRequest()// 그 이외의 경로는 모두 인증해야함
                 .authenticated();

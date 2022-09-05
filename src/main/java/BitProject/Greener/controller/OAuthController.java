@@ -20,13 +20,13 @@ public class OAuthController {
      * 카카오 callback
      * [GET] /oauth/kakao/callback
      */
-//    @ResponseBody
-//    @GetMapping("/kakao/callback")
-//    public void kakaoCallback(@RequestParam String code) {
-////       return oAuthService.getKakaoAccessToken(code);
-//        oAuthService.createKakaoUser(oAuthService.getKakaoAccessToken(code));
-////       return oAuthService.createKakaoUser(oAuthService.getKakaoAccessToken(code));
-//    }
+    @ResponseBody
+    @GetMapping("/kakao/callback")
+    public void kakaoCallback(@RequestParam String code,HttpServletResponse response) {
+//       return oAuthService.getKakaoAccessToken(code);
+        oAuthService.createKakaoUser(oAuthService.getKakaoAccessToken(code),response);
+//       return oAuthService.createKakaoUser(oAuthService.getKakaoAccessToken(code));
+    }
 
     @GetMapping("/kakao/callback2/{code}")
     public ResponseEntity<?> kakaoCallback2(@PathVariable String code, HttpServletResponse response) {

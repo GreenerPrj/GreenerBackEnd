@@ -1,0 +1,69 @@
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://cl6-2.cdqf0gxh6nhf.ap-northeast-2.rds.amazonaws.com/sampledb4?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: admin
+    password: 12345678
+
+  servlet:
+    multipart:
+      maxFileSize: 50MB
+      maxRequestSize: 50MB
+      location:
+
+  jackson:
+    serialization:
+      fail-on-empty-beans : false
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 1bc56ac190718591528ae1dfa1592db7
+            redirect-uri: http://localhost:8080/oauth/kakao/callback
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+#logging:
+#  level:
+#    org.springframework.orm.jpa: DEBUG
+
+
+server:
+  servlet:
+    context-path: /
+
+
+SECRET_KEY : hello
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIASYDPHV6B2TLFXF4H    # AWS IAM AccessKey 적기
+      secretKey: KaArMpr+ZDlNkBW558IXrS8n6s0fqMc//5I7T6vD #AWS IAM SecretKey 적기
+    s3:
+      bucket: cl6-2    # ex) marryting-gyunny
+      dir: /image # ex) /gyunny
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
