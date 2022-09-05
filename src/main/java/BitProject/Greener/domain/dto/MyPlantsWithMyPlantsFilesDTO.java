@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Getter
@@ -16,7 +17,7 @@ public class MyPlantsWithMyPlantsFilesDTO {
     private Long myPlantsId;
     private String name;
     private String bornDate;
-    private LocalDateTime createDate;
+    private String createDate;
     private Long myPlantsFilesId;
     private String fileName;
     private String filePath;
@@ -30,10 +31,9 @@ public class MyPlantsWithMyPlantsFilesDTO {
         MyPlantsWithMyPlantsFilesDTO instance = new MyPlantsWithMyPlantsFilesDTO();
         instance.myPlantsId = myPlants.getId();
         instance.name = myPlants.getName();
-        instance.createDate = myPlants.createDateTime();
+        instance.createDate = myPlants.createDateTime().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
         instance.plantsId =
                 Objects.nonNull(myPlants.getPlants()) ? myPlants.getPlants().getId() : null;
-
 
         return instance;
 

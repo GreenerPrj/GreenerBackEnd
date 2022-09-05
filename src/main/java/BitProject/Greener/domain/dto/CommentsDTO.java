@@ -3,6 +3,7 @@ package BitProject.Greener.domain.dto;
 import BitProject.Greener.domain.entity.Comments;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class CommentsDTO {
     private Long parentCommentsId;
     private String content;
     private String nickName;
-    private LocalDateTime createDate;
+    private String createDate;
 
 
 
@@ -30,8 +31,7 @@ public class CommentsDTO {
                          : null;
         commentsDTO.content = comments.getContent();
         commentsDTO.nickName = comments.getNickName();
-        commentsDTO.createDate = comments.createDateTime();
+        commentsDTO.createDate = comments.createDateTime().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
         return commentsDTO;
-
     }
 }
