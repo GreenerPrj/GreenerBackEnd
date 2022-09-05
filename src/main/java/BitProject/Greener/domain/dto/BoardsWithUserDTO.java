@@ -37,7 +37,6 @@ public class BoardsWithUserDTO{
         instance.title = boards.getTitle();
         instance.content = boards.getContent();
         instance.userId = userEntity.getId();
-        instance.name = userEntity.getName();
         instance.email = userEntity.getEmail();
         instance.bornDate= boards.createDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         instance.nickName = userEntity.getNickName();

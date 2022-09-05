@@ -45,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // /와 /board/**경로는 인증 안해도 됨.
 //                .antMatchers("/","/auth/signup","/auth/login","/api/v1/boards/**","/swagger-ui.html").permitAll()
                 .antMatchers("**").permitAll()
+                .antMatchers("/","/auth/signup","/auth/login","/api/v1/boards/**","/oauth/**","/kauth.kakao.com/**").permitAll()
+//                .antMatchers("**").permitAll()
                 .anyRequest()// 그 이외의 경로는 모두 인증해야함
                 .authenticated();
                 http.addFilterBefore(jwtAuthenticationFilter, CorsFilter.class);

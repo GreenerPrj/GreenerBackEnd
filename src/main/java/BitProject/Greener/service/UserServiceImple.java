@@ -28,13 +28,18 @@ public class UserServiceImple implements UserService {
 
     @Transactional
     public Long create(@Valid UserDto userDto ) {
-        if(!userDto.getPassword().equals(userDto.getPasswordcheck())) {
+
+
+        if((userRepository.findByEmail(userDto.getEmail())!=null||userDto.getPassword()!=null&&!userDto.getPassword().equals(userDto.getPasswordcheck()))) {
+            log.info("222");
             return null;
         }
         else {
-            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            userDto.setPasswordcheck(passwordEncoder.encode(userDto.getPasswordcheck()));
+            if (userDto.getPassword()!=null) {
+                userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            }
             UserEntity a = userRepository.save(userDto.toEntity());
+            log.info("111");
             return a.getId();
         }
     }
@@ -50,8 +55,12 @@ public class UserServiceImple implements UserService {
     public String tokenstore(UserEntity user, HttpServletResponse response){
         TokenEntity a =tokenProvider.tokenstore(user);
         String accessToken = a.getAccess();
+        log.info(response.getHeader("access"));
+        log.info(response.getHeader("id"));
         response.setHeader("access",a.getAccess());
         response.setHeader("id",user.getId().toString());
+        log.info(response.getHeader("access"));
+        log.info(response.getHeader("id"));
         return accessToken;
     }
 

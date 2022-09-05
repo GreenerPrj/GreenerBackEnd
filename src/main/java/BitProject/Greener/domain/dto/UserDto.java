@@ -15,8 +15,7 @@ public class UserDto {
 
     private Long id;
     private String token;
-    @NotBlank(message = "이름은 필수입니다.")
-    private String name;
+
 
     @NotBlank(message = "id는 필수입니다.")
     private String nickName;
@@ -34,7 +33,6 @@ public class UserDto {
     public UserEntity toEntity(){
         UserEntity userDto = UserEntity.builder()
                 .id(id)
-                .name(name)
                 .nickName(nickName)
                 .email(email)
                 .password(password)
