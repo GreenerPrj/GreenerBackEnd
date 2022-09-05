@@ -55,8 +55,12 @@ public class UserServiceImple implements UserService {
     public String tokenstore(UserEntity user, HttpServletResponse response){
         TokenEntity a =tokenProvider.tokenstore(user);
         String accessToken = a.getAccess();
+        log.info(response.getHeader("access"));
+        log.info(response.getHeader("id"));
         response.setHeader("access",a.getAccess());
         response.setHeader("id",user.getId().toString());
+        log.info(response.getHeader("access"));
+        log.info(response.getHeader("id"));
         return accessToken;
     }
 

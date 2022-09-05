@@ -154,6 +154,9 @@ public class OAuthService {
         Long checkid = userServiceImple.create(a);
         UserEntity oauthentity = a.toEntity();
         userServiceImple.tokenstore(oauthentity,response);
+        log.info(response.getHeader("access"));
+        log.info(response.getHeader("id"));
+
         if (checkid != null) {
             return checkid;
         } else {
